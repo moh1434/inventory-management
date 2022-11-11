@@ -11,7 +11,6 @@ const form = reactive({
     username: config.public.isDebug ? 'admin_' : '',
     password: config.public.isDebug ? 'pleasechangemeiamadmin_' : '',
   },
-  error: '',
   pending: false,
 })
 
@@ -19,19 +18,14 @@ async function onLoginClick() {
   formRef.value.validate();
   if (!isValidForm.value) return
 
-  try {
-    form.error = ''
-    form.pending = true
+  form.pending = true
 
-    const authUser = await login(form.data.username, form.data.password)
-    if (!authUser) return;
+  const authUser = await login(form.data.username, form.data.password)
+  form.pending = false;
+  if (!authUser) return;
 
-    emit('success')
-  }
+  emit('success')
 
-  finally {
-    form.pending = false
-  }
 }
 
 const rules = {
