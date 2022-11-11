@@ -14,6 +14,7 @@ const currentUser = useAuthUser()
     <h1>
       Home
     </h1>
-    n:{{ currentUser }}
+    <img src="imgs/avatar1.jpg" alt="no image" class="w-25" />
+    <p>current user:{{ currentUser }}</p>
   </div>
 </template>
