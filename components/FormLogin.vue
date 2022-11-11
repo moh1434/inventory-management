@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { mdiChevronRight } from '@mdi/js';
 const emit = defineEmits(['success'])
 
 const { login } = useAuth()
@@ -35,45 +34,33 @@ async function onLoginClick() {
   }
 }
 
+const rules = {
+  username: [
+    (v: string) => !!v || 'Username is required',
+    (v: string) => (v && v.length > 3) || 'Username must be more than 3 characters',
+    (v: string) => (v && v.length <= 10) || 'Username must be less than 10 characters',
+  ],
+  password: [
+    (v: string) => !!v || 'password is required',
+    (v: string) => (v && v.length > 7) || 'Password must be more than 7 characters',
+  ]
+}
 
 </script>
 
 <template>
-  <v-form v-model="isValidForm" ref="formRef">
-    <v-card class="mx-auto font-weight-bold" max-width="344" title="User Login">
-      <v-container>
-        <v-text-field v-model="form.data.username" color="primary" label="Username" variant="underlined" required>
-        </v-text-field>
-
-        <v-text-field v-model="form.data.password" color="primary" label="Password" placeholder="Enter your password"
-          variant="underlined" required></v-text-field>
-      </v-container>
-
-      <v-divider></v-divider>
-
-      <v-card-actions>
-        <v-spacer></v-spacer>
-
-        <v-btn color="success" :disabled="form.pending" :loading="form.pending" @click.prevent="onLoginClick">
-          Login
-          <v-icon :icon="mdiChevronRight" end></v-icon>
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-form>
-
-  <br /><br /><br /><br />
-
-  <v-card class="mx-auto px-6 py-8" max-width="344">
+  <v-card class="mx-auto px-6 py-8 mt-14" max-width="344">
     <v-form v-model="isValidForm" ref="formRef">
-      <v-text-field v-model="form.data.username" class="mb-2" required label="Username"></v-text-field>
+      <v-text-field v-model="form.data.username" class="mb-2" :rules="rules.username" required label="Username">
+      </v-text-field>
 
-      <v-text-field v-model="form.data.password" required label="Password" placeholder="Enter your password">
+      <v-text-field v-model="form.data.password" :rules="rules.password" required label="Password"
+        placeholder="Enter your password">
       </v-text-field>
 
       <br>
 
-      <v-btn :disabled="isValidForm || form.pending" :loading="form.pending" block color="success" size="large"
+      <v-btn :disabled="!isValidForm || form.pending" :loading="form.pending" block color="success" size="large"
         variant="elevated" @click.prevent="onLoginClick">
         Login
       </v-btn>
