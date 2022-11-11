@@ -8,8 +8,8 @@ const formRef = ref<any>(null); //vuetify <v-form ref="formRef"
 const isValidForm = ref(null);
 const form = reactive({
   data: {
-    username: config.public.isDebug ? 'name_' : '',
-    password: config.public.isDebug ? 'password_' : '',
+    username: config.public.isDebug ? 'admin_' : '',
+    password: config.public.isDebug ? 'pleasechangemeiamadmin_' : '',
   },
   error: '',
   pending: false,
