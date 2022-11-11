@@ -5,6 +5,9 @@ import { ar } from "vuetify/locale";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
+    defaults: {
+      nuxt: true,
+    },
     locale: {
       defaultLocale: "ar",
       // fallbackLocale: "en",
