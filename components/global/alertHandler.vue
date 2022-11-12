@@ -8,7 +8,7 @@ const { alertsList, clearAlert } = useAlerts();
     <ClientOnly>
       <div v-for="(alertList, type) in alertsList" :key="type">
 
-        <v-alert :type="type" v-for="alert in alertList" :key="alert.id" class="tw-mb-5">
+        <v-alert :type="type" v-for="alert in alertList" :key="alert.id" class="mb-4">
           {{ alert.message }}
           <template #close>
             <v-btn icon @click="clearAlert(alert.id)">
