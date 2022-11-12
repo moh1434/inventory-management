@@ -30,3 +30,10 @@ export type institutionResponseI = institutionI & {
   id: string;
   ministry: ministryI;
 };
+
+export type categoryI = {
+  name: string;
+};
+export type categoryWithId = categoryI & {
+  id: string;
+};
