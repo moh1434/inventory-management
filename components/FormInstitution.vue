@@ -98,7 +98,7 @@ const rules = {
 </script>
 
 <template>
-    <v-card class="mx-auto px-6 py-8 mt-14" max-width="460">
+    <v-card class="mx-auto px-6 py-8 mt-14" max-width="560">
         <v-form v-model="isValidForm" ref="formRef">
 
             <v-card-title class="px-0">institution data:</v-card-title>
