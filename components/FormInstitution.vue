@@ -78,6 +78,10 @@ async function onCreateInstitutionClick() {
 
 const required = (field = "this field") => (v: string) => !!v || `${field} is required`;
 const notEmpty = (field = "this field") => (v: string) => (v && v.length > 0) || `${field} can't be empty`;
+const phoneNumber = (v: string) => (typeof v === 'string' &&
+    v.length == 11 && v.startsWith('07') &&
+    !!Number(v)) || "Phone must starts with '07', and contains 11 number";
+
 const rules = {
     username: [
         required('Username'),
@@ -117,7 +121,7 @@ const rules = {
             </v-text-field>
 
             <v-text-field v-model="form.data.institution.phoneNumber" class="mb-2" required label="Phone number"
-                :rules="[required('Phone'), notEmpty('Phone')]">
+                :rules="[required('Phone'), notEmpty('Phone'), phoneNumber]">
             </v-text-field>
 
             <v-select item-title="name" item-value="id" :items="ministries" v-model="form.data.institution.ministryId"
