@@ -22,7 +22,7 @@ export const useAuth = () => {
     });
     if (!result) return;
 
-    setUser(result);
+    setUser(result?.user || result);
 
     return authUser;
   };
@@ -44,7 +44,7 @@ export const useAuth = () => {
         // setCookie(null)
         return;
       }
-      setUser(result);
+      setUser(result?.user || result);
     }
 
     return authUser;
