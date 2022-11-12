@@ -23,6 +23,8 @@ const initialForm = (): { data: institutionFormI, pending: boolean } => ({
     pending: false,
 });
 const form = ref<{ data: institutionFormI, pending: boolean }>(initialForm());
+
+// TODO: danger this printed in dist deploy files also!, remove it and use .env if you want, also it printed in github!
 if (config.public.isDebug) {
     form.value.data = {
         institution: {
