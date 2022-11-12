@@ -155,7 +155,7 @@ async function createCategory() {
         <template v-if="deleteDialogCategory">
             <Dialog :dialogValue="deleteDialogCategory.name" @close="deleteDialogCategory = null"
                 @GreenBtnClick="deleteCategory" btn-green-text="Delete" btn-red-text="Cancel"
-                :title="`Delete category '${deleteDialogCategory.name}' and all it's products?`"
+                :title="`Delete category '${deleteDialogCategory.name}'`" subTitle="and all it's products"
                 :loading="loadingEditDelete">
             </Dialog>
         </template>
