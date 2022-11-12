@@ -27,12 +27,14 @@ export async function useWrapFetch<response>(
 
     // }
     const { setAlert } = useAlerts();
-    const messages: string[] | undefined =
+    const messages: string[] | string | undefined =
       theResponse?.error?.response?._data?.message;
     if (Array.isArray(messages)) {
       messages.forEach((msg: string) => {
         setAlert(msg, alertTypeWhenError);
       });
+    } else if (typeof messages == "string") {
+      setAlert(messages, alertTypeWhenError);
     } else {
       setAlert(theResponse.error, alertTypeWhenError);
     }
