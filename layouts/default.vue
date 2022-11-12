@@ -37,6 +37,9 @@ const drawer = ref<boolean | null>(null);
         </v-list-item>
         <template v-if="currentUser">
           <template v-if="isAdmin">
+            <v-list-item :disabled="form.pending" :to="{ name: 'categories' }">
+              Categories
+            </v-list-item>
             <v-list-item :disabled="form.pending" :to="{ name: 'create-institution' }">
               Create Institution
             </v-list-item>
