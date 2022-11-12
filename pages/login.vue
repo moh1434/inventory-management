@@ -3,11 +3,10 @@ definePageMeta({
   middleware: ['guest-only'],
 })
 
-const currentUser = useAuthUser()
 const isAdmin = useAdmin()
 
 async function onLoginSuccess() {
-  const routeName = isAdmin.value ? 'index' : 'index'
+  const routeName = isAdmin.value ? 'categories' : 'index'
 
   await navigateTo({ name: routeName })
 }
