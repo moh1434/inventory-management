@@ -20,17 +20,17 @@ useWrapFetch<categoryWithId[]>('category').then(({ result }) => {
 });
 
 //
-const loading = ref(false);
+const loadingEditDelete = ref(false);
 const editDialogCategory = ref<categoryWithId | null>(null);
 function openEditCategoryDialog(category: categoryWithId) {
     editDialogCategory.value = { ...category };
 }
 async function editCategory() {
-    loading.value = true;
+    loadingEditDelete.value = true;
     const targetCategory = categories.value.find(category => category.id === editDialogCategory.value?.id);
 
     if (!targetCategory || editDialogCategory.value?.name === targetCategory?.name) {
-        loading.value = false;
+        loadingEditDelete.value = false;
         editDialogCategory.value = null;
         return;
     }
@@ -45,7 +45,7 @@ async function editCategory() {
         targetCategory.name = result.name;
         editDialogCategory.value = null;
     }
-    loading.value = false;
+    loadingEditDelete.value = false;
 }
 // 
 const deleteDialogCategory = ref<categoryWithId | null>(null);
@@ -53,11 +53,11 @@ function openDeleteCategoryDialog(category: categoryWithId) {
     deleteDialogCategory.value = { ...category };
 }
 async function deleteCategory() {
-    loading.value = true;
+    loadingEditDelete.value = true;
     const index = categories.value.findIndex(category => category.id === deleteDialogCategory.value?.id);
 
     if (index == -1) {
-        loading.value = false;
+        loadingEditDelete.value = false;
         deleteDialogCategory.value = null;
         return;
     }
@@ -72,7 +72,7 @@ async function deleteCategory() {
         categories.value.splice(index, 1);
         deleteDialogCategory.value = null;
     }
-    loading.value = false;
+    loadingEditDelete.value = false;
 }
 //
 
@@ -147,7 +147,7 @@ async function createCategory() {
         </v-table>
         <template v-if="editDialogCategory">
             <Dialog :dialogValue="editDialogCategory.name" @close="editDialogCategory = null"
-                @GreenBtnClick="editCategory" title="Edit Category:">
+                @GreenBtnClick="editCategory" title="Edit Category:" :loading="loadingEditDelete">
                 <v-text-field v-model="editDialogCategory.name" label="Category">
                 </v-text-field>
             </Dialog>
@@ -155,7 +155,8 @@ async function createCategory() {
         <template v-if="deleteDialogCategory">
             <Dialog :dialogValue="deleteDialogCategory.name" @close="deleteDialogCategory = null"
                 @GreenBtnClick="deleteCategory" btn-green-text="Delete" btn-red-text="Cancel"
-                :title="`Delete category '${deleteDialogCategory.name}' and all it's products?`">
+                :title="`Delete category '${deleteDialogCategory.name}' and all it's products?`"
+                :loading="loadingEditDelete">
             </Dialog>
         </template>
     </v-card>
