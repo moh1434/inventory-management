@@ -1,7 +1,8 @@
 <script setup lang='ts'>
-import { mdiPencil, mdiDeleteForever } from '@mdi/js';
+import { mdiPencil, mdiDeleteForever, mdiPlusBox } from '@mdi/js';
+import { Ref } from 'nuxt/dist/app/compat/capi';
 
-import { categoryWithId } from '~~/types';
+import { categoryWithId, vuetifyFormI } from '~~/types';
 
 definePageMeta({
     middleware: ['admin-only'],
@@ -18,6 +19,7 @@ useWrapFetch<categoryWithId[]>('category').then(({ result }) => {
 
 });
 
+//
 const loading = ref(false);
 const editDialogCategory = ref<categoryWithId | null>(null);
 function openEditCategoryDialog(category: categoryWithId) {
@@ -72,6 +74,34 @@ async function deleteCategory() {
     }
     loading.value = false;
 }
+//
+
+const createCategoryName = ref('');
+
+const loadingCreate = ref(false);
+
+const formCreateRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
+const isValidCreateForm = ref<boolean | null>(null);
+const { required, notEmpty } = useValidationRules();
+
+async function createCategory() {
+    formCreateRef.value.validate();
+    if (!isValidCreateForm.value) return
+
+    loadingCreate.value = true;
+    const { result } = await useWrapFetch<categoryWithId>(`category`, {
+        method: 'POST',
+        body: {
+            name: createCategoryName.value
+        }
+    });
+    loadingCreate.value = false;
+    if (result) {
+        categories.value.push(result);
+        //TODO: use this in the older pages,components,code
+        formCreateRef.value.reset();
+    }
+}
 </script>
 
 <template>
@@ -97,6 +127,22 @@ async function deleteCategory() {
                         </v-btn>
                     </td>
                 </tr>
+                <tr>
+                    <td colspan="2">
+                        <v-form v-model="isValidCreateForm" ref="formCreateRef" class="flex">
+                            <v-text-field v-model="createCategoryName" label="new category" required
+                                :disabled="loadingCreate" variant="underlined"
+                                :rules="[required('Category'), notEmpty('Category')]">
+                            </v-text-field>
+                            <v-card-actions>
+                                <v-btn @click="createCategory" variant="text" :disabled="loadingCreate"
+                                    :loading="loadingCreate">
+                                    <v-icon :icon="mdiPlusBox" color="green" size="large"></v-icon>
+                                </v-btn>
+                            </v-card-actions>
+                        </v-form>
+                    </td>
+                </tr>
             </tbody>
         </v-table>
         <template v-if="editDialogCategory">
@@ -116,5 +162,8 @@ async function deleteCategory() {
 </template>
 
 <style>
-
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+}
 </style>
