@@ -1,0 +1,170 @@
+<script setup lang='ts'>
+import { mdiPencil, mdiDeleteForever, mdiPlusBox } from '@mdi/js';
+import { Ref } from 'nuxt/dist/app/compat/capi';
+
+import { categoryWithId, vuetifyFormI } from '~~/types';
+
+definePageMeta({
+    middleware: ['admin-only'],
+});
+
+const categories = ref<categoryWithId[]>([]);
+
+useWrapFetch<categoryWithId[]>('ministry').then(({ result }) => {
+    if (!result) {
+        categories.value = [];
+        return;
+    };
+    categories.value = result;
+
+});
+
+//
+const loadingEditDelete = ref(false);
+const editDialogCategory = ref<categoryWithId | null>(null);
+function openEditCategoryDialog(category: categoryWithId) {
+    editDialogCategory.value = { ...category };
+}
+async function editCategory() {
+    loadingEditDelete.value = true;
+    const targetCategory = categories.value.find(category => category.id === editDialogCategory.value?.id);
+
+    if (!targetCategory || editDialogCategory.value?.name === targetCategory?.name) {
+        loadingEditDelete.value = false;
+        editDialogCategory.value = null;
+        return;
+    }
+
+    const { result } = await useWrapFetch<categoryWithId>(`ministry/${editDialogCategory.value?.id}`, {
+        method: 'PATCH',
+        body: {
+            name: editDialogCategory.value?.name
+        }
+    });
+    if (result) {
+        targetCategory.name = result.name;
+        editDialogCategory.value = null;
+    }
+    loadingEditDelete.value = false;
+}
+// 
+const deleteDialogCategory = ref<categoryWithId | null>(null);
+function openDeleteCategoryDialog(category: categoryWithId) {
+    deleteDialogCategory.value = { ...category };
+}
+async function deleteCategory() {
+    loadingEditDelete.value = true;
+    const index = categories.value.findIndex(category => category.id === deleteDialogCategory.value?.id);
+
+    if (index == -1) {
+        loadingEditDelete.value = false;
+        deleteDialogCategory.value = null;
+        return;
+    }
+
+    const { result } = await useWrapFetch<categoryWithId>(`ministry/${deleteDialogCategory.value?.id}`, {
+        method: 'DELETE',
+        body: {
+            name: deleteDialogCategory.value?.name
+        }
+    });
+    if (result) {
+        categories.value.splice(index, 1);
+        deleteDialogCategory.value = null;
+    }
+    loadingEditDelete.value = false;
+}
+//
+
+const createCategoryName = ref('');
+
+const loadingCreate = ref(false);
+
+const formCreateRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
+const isValidCreateForm = ref<boolean | null>(null);
+const { required, notEmpty } = useValidationRules();
+
+async function createCategory() {
+    formCreateRef.value.validate();
+    if (!isValidCreateForm.value) return
+
+    loadingCreate.value = true;
+    const { result } = await useWrapFetch<categoryWithId>(`ministry`, {
+        method: 'POST',
+        body: {
+            name: createCategoryName.value
+        }
+    });
+    loadingCreate.value = false;
+    if (result) {
+        categories.value.push(result);
+        //TODO: use this in the older pages,components,code
+        formCreateRef.value.reset();
+    }
+}
+</script>
+
+<template>
+    <v-card class="mx-auto px-6 py-8 mt-14" max-width="460">
+        <v-table>
+            <thead>
+                <tr>
+                    <th class="text-left" colspan="2">
+                        Ministry
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for=" item in categories" :key="item.id">
+                    <td>{{ item.name }}</td>
+                    <td class="text-right">
+                        <v-btn @click="openEditCategoryDialog(item)" variant="text">
+                            <v-icon :icon="mdiPencil" color="green"></v-icon>
+                        </v-btn>
+
+                        <v-btn @click="openDeleteCategoryDialog(item)" variant="text">
+                            <v-icon :icon="mdiDeleteForever" color="red"></v-icon>
+                        </v-btn>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <v-form v-model="isValidCreateForm" ref="formCreateRef" class="flex">
+                            <v-text-field v-model="createCategoryName" label="new ministry" required
+                                :disabled="loadingCreate" variant="underlined"
+                                :rules="[required('Ministry'), notEmpty('Ministry')]">
+                            </v-text-field>
+                            <v-card-actions>
+                                <v-btn @click="createCategory" variant="text" :disabled="loadingCreate"
+                                    :loading="loadingCreate">
+                                    <v-icon :icon="mdiPlusBox" color="green" size="large"></v-icon>
+                                </v-btn>
+                            </v-card-actions>
+                        </v-form>
+                    </td>
+                </tr>
+            </tbody>
+        </v-table>
+        <template v-if="editDialogCategory">
+            <Dialog :dialogValue="editDialogCategory.name" @close="editDialogCategory = null"
+                @GreenBtnClick="editCategory" title="Edit Ministry:" :loading="loadingEditDelete">
+                <v-text-field v-model="editDialogCategory.name" label="Ministry">
+                </v-text-field>
+            </Dialog>
+        </template>
+        <template v-if="deleteDialogCategory">
+            <Dialog :dialogValue="deleteDialogCategory.name" @close="deleteDialogCategory = null"
+                @GreenBtnClick="deleteCategory" btn-green-text="Delete" btn-red-text="Cancel"
+                :title="`Delete ministry '${deleteDialogCategory.name}'`"
+                subTitle="and all it's products and institutions" :loading="loadingEditDelete">
+            </Dialog>
+        </template>
+    </v-card>
+</template>
+
+<style>
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+</style>

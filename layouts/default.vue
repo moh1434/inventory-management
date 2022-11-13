@@ -40,6 +40,9 @@ const drawer = ref<boolean | null>(null);
             <v-list-item :disabled="form.pending" :to="{ name: 'categories' }">
               Categories
             </v-list-item>
+            <v-list-item :disabled="form.pending" :to="{ name: 'ministries' }">
+              Ministries
+            </v-list-item>
             <v-list-item :disabled="form.pending" :to="{ name: 'create-institution' }">
               Create Institution
             </v-list-item>
@@ -59,7 +62,7 @@ const drawer = ref<boolean | null>(null);
     <v-app-bar>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title>My Website</v-toolbar-title>
+      <v-toolbar-title>البنك الوطني للمواد الراكدة</v-toolbar-title>
     </v-app-bar>
 
     <v-main>
