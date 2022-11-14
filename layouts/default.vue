@@ -43,8 +43,8 @@ const drawer = ref<boolean | null>(null);
             <v-list-item :disabled="form.pending" :to="{ name: 'ministries' }">
               Ministries
             </v-list-item>
-            <v-list-item :disabled="form.pending" :to="{ name: 'create-institution' }">
-              Create Institution
+            <v-list-item :disabled="form.pending" :to="{ name: 'institutions' }">
+              Institutions
             </v-list-item>
           </template>
           <v-list-item :disabled="form.pending" @click="onLogoutClick">

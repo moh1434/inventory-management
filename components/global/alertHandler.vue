@@ -37,6 +37,6 @@ const { alertsList, clearAlert } = useAlerts();
   left: 0px;
   right: 0px;
 
-  z-index: 1011;
+  z-index: 10000;
 }
 </style>

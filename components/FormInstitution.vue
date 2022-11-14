@@ -1,4 +1,12 @@
-<script setup lang='ts'>import { institutionFormI, institutionResponseI, ministryI } from '~~/types';
+<script setup lang='ts'>
+import { institutionFormI, institutionResponseI, ministryI } from '~~/types';
+interface Props {
+    loading?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    loading: false,
+});
 
 const emit = defineEmits(['success'])
 
@@ -20,7 +28,7 @@ const initialForm = (): { data: institutionFormI, pending: boolean } => ({
         password: '',
     },
 
-    pending: false,
+    pending: props.loading,
 });
 const form = ref<{ data: institutionFormI, pending: boolean }>(initialForm());
 
@@ -78,7 +86,7 @@ async function onCreateInstitutionClick() {
 
 }
 
-const { required, notEmpty, phoneNumber } = useValidationRules();
+const { required, notEmpty } = useValidationRules();
 const rules = {
     username: [
         required('Username'),
@@ -102,24 +110,10 @@ const rules = {
         <v-form v-model="isValidForm" ref="formRef">
 
             <v-card-title class="px-0">institution data:</v-card-title>
-            <v-text-field v-model="form.data.institution.name" class="mb-2" required label="name"
-                :rules="[required('Name'), notEmpty('Name')]">
-            </v-text-field>
-            <v-text-field v-model="form.data.institution.city" class="mb-2" required label="City"
-                :rules="[required('City'), notEmpty('City')]">
-            </v-text-field>
-            <v-text-field v-model="form.data.institution.location" class="mb-2" required label="Location"
-                :rules="[required('Location'), notEmpty('Location')]">
-            </v-text-field>
 
-            <!-- TODO: replace with File Input or remove it -->
-            <v-text-field v-model="form.data.institution.image" class="mb-2" required label="Image"
-                :rules="[required('Image'), notEmpty('Image')]">
-            </v-text-field>
-
-            <v-text-field v-model="form.data.institution.phoneNumber" class="mb-2" required label="Phone number"
-                :rules="[required('Phone'), notEmpty('Phone'), phoneNumber]">
-            </v-text-field>
+            <FormBaseInstitution :institution="form.data.institution" @name="form.data.institution.name = $event"
+                @city="form.data.institution.city = $event" @phone-number="form.data.institution.phoneNumber = $event"
+                @location="form.data.institution.location = $event" @image="form.data.institution.image = $event" />
 
             <v-select item-title="name" item-value="id" :items="ministries" v-model="form.data.institution.ministryId"
                 required label="ministries" :rules="[required('ministry'), notEmpty('ministry')]" />
