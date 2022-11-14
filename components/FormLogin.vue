@@ -54,7 +54,7 @@ const rules = {
 
       <br>
 
-      <v-btn :disabled="!isValidForm || form.pending" :loading="form.pending" block color="success" size="large"
+      <v-btn :disabled="!isValidForm || form.pending" :loading="form.pending" block color="blue" size="large"
         variant="elevated" @click.prevent="onLoginClick">
         Login
       </v-btn>
