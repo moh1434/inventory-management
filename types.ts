@@ -31,6 +31,10 @@ export type institutionFormI = {
   password: string;
 };
 
+export type institutionWithIdI = institutionI & {
+  id: string;
+};
+
 export type ministryI = {
   id: string;
   name: string;
