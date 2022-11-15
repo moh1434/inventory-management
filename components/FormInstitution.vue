@@ -1,5 +1,6 @@
 <script setup lang='ts'>
-import { institutionFormI, institutionResponseI, ministryI } from '~~/types';
+import { institutionFormI, institutionResponseI, ministryWithId } from '~~/types';
+
 interface Props {
     loading?: boolean;
 }
@@ -55,9 +56,9 @@ if (config.public.isDebug) {
 
 }
 
-const ministries = ref<ministryI[]>([]);
+const ministries = ref<ministryWithId[]>([]);
 
-useWrapFetch<ministryI[]>('ministry').then(({ result }) => {
+useWrapFetch<ministryWithId[]>('ministry').then(({ result }) => {
     if (!result) {
         ministries.value = [];
         return;

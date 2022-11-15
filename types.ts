@@ -16,6 +16,13 @@ export type UserI = {
   institution_id: number;
 };
 
+export type ministryI = {
+  name: string;
+};
+export type ministryWithId = ministryI & {
+  id: string;
+};
+
 export type institutionI = {
   name: string;
   city: string;
@@ -35,25 +42,14 @@ export type institutionWithIdI = institutionI & {
   id: string;
 };
 
-export type ministryI = {
-  id: string;
-  name: string;
-};
-
 export type institutionResponseI = institutionI & {
   id: string;
-  ministry: ministryI;
+  ministry: ministryWithId;
 };
 
 export type categoryI = {
   name: string;
 };
 export type categoryWithId = categoryI & {
-  id: string;
-};
-export type ministryI = {
-  name: string;
-};
-export type ministryWithId = ministryI & {
   id: string;
 };
