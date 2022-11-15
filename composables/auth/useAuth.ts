@@ -34,6 +34,7 @@ export const useAuth = () => {
     }
 
     setUser(result);
+    navigateTo({ name: "login" });
     return true;
   };
 
