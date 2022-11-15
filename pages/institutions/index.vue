@@ -8,14 +8,14 @@ definePageMeta({
     middleware: ['admin-only'],
 });
 
-const categories = ref<institutionWithIdI[]>([]);
+const institutions = ref<institutionWithIdI[]>([]);
 
 useWrapFetch<institutionWithIdI[]>('institution').then(({ result }) => {
     if (!result) {
-        categories.value = [];
+        institutions.value = [];
         return;
     };
-    categories.value = result;
+    institutions.value = result;
 });
 //ERP: dynamic workflow
 //
@@ -23,7 +23,7 @@ const isOpenCreateDialog = ref<boolean>(false);
 function onCreatedInstitution($event: institutionWithIdI) {
     const createdInstitution = $event;
     if (!createdInstitution) return;
-    categories.value.push($event);
+    institutions.value.push($event);
     isOpenCreateDialog.value = false;
     // useAlerts().setAlert('institution created successfully', 'success');
 }
@@ -34,59 +34,59 @@ const formEditRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
 const isValidEditForm = ref<boolean | null>(null);
 
 const loadingEditDelete = ref(false);
-const editDialogCategory = ref<institutionWithIdI | null>(null);
-function openEditCategoryDialog(category: institutionWithIdI) {
-    editDialogCategory.value = { ...category };
+const editDialogInstitution = ref<institutionWithIdI | null>(null);
+function openEditInstitutionDialog(institution: institutionWithIdI) {
+    editDialogInstitution.value = { ...institution };
 }
-async function editCategory() {
+async function editInstitution() {
     formEditRef.value.validate();
     if (!isValidEditForm.value) return
 
     loadingEditDelete.value = true;
-    const targetCategory = categories.value.find(category => category.id === editDialogCategory.value?.id);
+    const targetInstitution = institutions.value.find(institution => institution.id === editDialogInstitution.value?.id);
 
-    if (!targetCategory || editDialogCategory.value?.name === targetCategory?.name) {
+    if (!targetInstitution || editDialogInstitution.value?.name === targetInstitution?.name) {
         loadingEditDelete.value = false;
-        editDialogCategory.value = null;
+        editDialogInstitution.value = null;
         return;
     }
 
-    const { result } = await useWrapFetch<institutionWithIdI>(`institution/${editDialogCategory.value?.id}`, {
+    const { result } = await useWrapFetch<institutionWithIdI>(`institution/${editDialogInstitution.value?.id}`, {
         method: 'PATCH',
-        body: editDialogCategory.value
+        body: editDialogInstitution.value
     });
     loadingEditDelete.value = false;
     if (result) {
-        Object.assign(targetCategory, result);
+        Object.assign(targetInstitution, result);
         formEditRef.value.reset();
-        editDialogCategory.value = null;
+        editDialogInstitution.value = null;
     }
 
 }
 // 
-const deleteDialogCategory = ref<institutionWithIdI | null>(null);
-function openDeleteCategoryDialog(category: institutionWithIdI) {
-    deleteDialogCategory.value = { ...category };
+const deleteDialogInstitution = ref<institutionWithIdI | null>(null);
+function openDeleteInstitutionDialog(institution: institutionWithIdI) {
+    deleteDialogInstitution.value = { ...institution };
 }
-async function deleteCategory() {
+async function deleteInstitution() {
     loadingEditDelete.value = true;
-    const index = categories.value.findIndex(category => category.id === deleteDialogCategory.value?.id);
+    const index = institutions.value.findIndex(institution => institution.id === deleteDialogInstitution.value?.id);
 
     if (index == -1) {
         loadingEditDelete.value = false;
-        deleteDialogCategory.value = null;
+        deleteDialogInstitution.value = null;
         return;
     }
 
-    const { result } = await useWrapFetch<institutionWithIdI>(`institution/${deleteDialogCategory.value?.id}`, {
+    const { result } = await useWrapFetch<institutionWithIdI>(`institution/${deleteDialogInstitution.value?.id}`, {
         method: 'DELETE',
         body: {
-            name: deleteDialogCategory.value?.name
+            name: deleteDialogInstitution.value?.name
         }
     });
     if (result) {
-        categories.value.splice(index, 1);
-        deleteDialogCategory.value = null;
+        institutions.value.splice(index, 1);
+        deleteDialogInstitution.value = null;
     }
     loadingEditDelete.value = false;
 }
@@ -121,18 +121,18 @@ async function deleteCategory() {
                 </tr>
             </thead>
             <tbody>
-                <tr v-for=" item in categories" :key="item.id">
+                <tr v-for=" item in institutions" :key="item.id">
                     <td>{{ item.name }}</td>
                     <td>{{ item.phoneNumber }}</td>
                     <td>{{ item.city }}</td>
                     <td>{{ item.location }}</td>
                     <td><img :src="item.image" alt="no image" class="img-width" /></td>
                     <td class="text-center">
-                        <v-btn @click="openEditCategoryDialog(item)" variant="text">
+                        <v-btn @click="openEditInstitutionDialog(item)" variant="text">
                             <v-icon :icon="mdiPencil" color="green"></v-icon>
                         </v-btn>
 
-                        <v-btn @click="openDeleteCategoryDialog(item)" variant="text">
+                        <v-btn @click="openDeleteInstitutionDialog(item)" variant="text">
                             <v-icon :icon="mdiDeleteForever" color="red"></v-icon>
                         </v-btn>
                     </td>
@@ -150,21 +150,23 @@ async function deleteCategory() {
         <v-dialog v-model="isOpenCreateDialog" max-width="660">
             <FormInstitution @success="onCreatedInstitution" class="w-full" />
         </v-dialog>
-        <template v-if="editDialogCategory">
-            <Dialog :dialogValue="editDialogCategory.name" @close="editDialogCategory = null"
-                @GreenBtnClick="editCategory" title="Edit Institution:" :loading="loadingEditDelete">
+        <template v-if="editDialogInstitution">
+            <Dialog :dialogValue="editDialogInstitution.name" @close="editDialogInstitution = null"
+                @GreenBtnClick="editInstitution" title="Edit Institution:" :loading="loadingEditDelete">
                 <v-form ref="formEditRef" v-model="isValidEditForm">
-                    <!-- ignore TS, i have  <template v-if="editDialogCategory"> -->
-                    <FormBaseInstitution :institution="editDialogCategory" @name="editDialogCategory.name = $event"
-                        @city="editDialogCategory.city = $event" @phone-number="editDialogCategory.phoneNumber = $event"
-                        @location="editDialogCategory.location = $event" @image="editDialogCategory.image = $event" />
+                    <!-- ignore TS, i have  <template v-if="editDialogInstitution"> -->
+                    <FormBaseInstitution :institution="editDialogInstitution"
+                        @name="editDialogInstitution.name = $event" @city="editDialogInstitution.city = $event"
+                        @phone-number="editDialogInstitution.phoneNumber = $event"
+                        @location="editDialogInstitution.location = $event"
+                        @image="editDialogInstitution.image = $event" />
                 </v-form>
             </Dialog>
         </template>
-        <template v-if="deleteDialogCategory">
-            <Dialog :dialogValue="deleteDialogCategory.name" @close="deleteDialogCategory = null"
-                @GreenBtnClick="deleteCategory" btn-green-text="Delete" btn-red-text="Cancel"
-                :title="`Delete institution '${deleteDialogCategory.name}'`" subTitle="and all it's products"
+        <template v-if="deleteDialogInstitution">
+            <Dialog :dialogValue="deleteDialogInstitution.name" @close="deleteDialogInstitution = null"
+                @GreenBtnClick="deleteInstitution" btn-green-text="Delete" btn-red-text="Cancel"
+                :title="`Delete institution '${deleteDialogInstitution.name}'`" subTitle="and all it's products"
                 :loading="loadingEditDelete">
             </Dialog>
         </template>
