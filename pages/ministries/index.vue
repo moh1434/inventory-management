@@ -2,81 +2,81 @@
 import { mdiPencil, mdiDeleteForever, mdiPlusBox } from '@mdi/js';
 import { Ref } from 'nuxt/dist/app/compat/capi';
 
-import { categoryWithId, vuetifyFormI } from '~~/types';
+import { ministryWithId, vuetifyFormI } from '~~/types';
 
 definePageMeta({
     middleware: ['admin-only'],
 });
 
-const categories = ref<categoryWithId[]>([]);
+const ministries = ref<ministryWithId[]>([]);
 
-useWrapFetch<categoryWithId[]>('ministry').then(({ result }) => {
+useWrapFetch<ministryWithId[]>('ministry').then(({ result }) => {
     if (!result) {
-        categories.value = [];
+        ministries.value = [];
         return;
     };
-    categories.value = result;
+    ministries.value = result;
 
 });
 
 //
 const loadingEditDelete = ref(false);
-const editDialogCategory = ref<categoryWithId | null>(null);
-function openEditCategoryDialog(category: categoryWithId) {
-    editDialogCategory.value = { ...category };
+const editDialogMinistry = ref<ministryWithId | null>(null);
+function openEditMinistryDialog(ministry: ministryWithId) {
+    editDialogMinistry.value = { ...ministry };
 }
-async function editCategory() {
+async function editMinistry() {
     loadingEditDelete.value = true;
-    const targetCategory = categories.value.find(category => category.id === editDialogCategory.value?.id);
+    const targetMinistry = ministries.value.find(ministry => ministry.id === editDialogMinistry.value?.id);
 
-    if (!targetCategory || editDialogCategory.value?.name === targetCategory?.name) {
+    if (!targetMinistry || editDialogMinistry.value?.name === targetMinistry?.name) {
         loadingEditDelete.value = false;
-        editDialogCategory.value = null;
+        editDialogMinistry.value = null;
         return;
     }
 
-    const { result } = await useWrapFetch<categoryWithId>(`ministry/${editDialogCategory.value?.id}`, {
+    const { result } = await useWrapFetch<ministryWithId>(`ministry/${editDialogMinistry.value?.id}`, {
         method: 'PATCH',
         body: {
-            name: editDialogCategory.value?.name
+            name: editDialogMinistry.value?.name
         }
     });
     if (result) {
-        targetCategory.name = result.name;
-        editDialogCategory.value = null;
+        targetMinistry.name = result.name;
+        editDialogMinistry.value = null;
     }
     loadingEditDelete.value = false;
 }
 // 
-const deleteDialogCategory = ref<categoryWithId | null>(null);
-function openDeleteCategoryDialog(category: categoryWithId) {
-    deleteDialogCategory.value = { ...category };
+const deleteDialogMinistry = ref<ministryWithId | null>(null);
+function openDeleteMinistryDialog(ministry: ministryWithId) {
+    deleteDialogMinistry.value = { ...ministry };
 }
-async function deleteCategory() {
+async function deleteMinistry() {
     loadingEditDelete.value = true;
-    const index = categories.value.findIndex(category => category.id === deleteDialogCategory.value?.id);
+    const index = ministries.value.findIndex(ministry => ministry.id === deleteDialogMinistry.value?.id);
 
     if (index == -1) {
         loadingEditDelete.value = false;
-        deleteDialogCategory.value = null;
+        deleteDialogMinistry.value = null;
         return;
     }
 
-    const { result } = await useWrapFetch<categoryWithId>(`ministry/${deleteDialogCategory.value?.id}`, {
+    const { result } = await useWrapFetch<ministryWithId>(`ministry/${deleteDialogMinistry.value?.id}`, {
         method: 'DELETE',
         body: {
-            name: deleteDialogCategory.value?.name
+            name: deleteDialogMinistry.value?.name
         }
     });
     if (result) {
-        categories.value.splice(index, 1);
-        deleteDialogCategory.value = null;
+        ministries.value.splice(index, 1);
+        deleteDialogMinistry.value = null;
     }
     loadingEditDelete.value = false;
 }
 //
 
-const createCategoryName = ref('');
+const createMinistryName = ref('');
 
 const loadingCreate = ref(false);
 
@@ -84,20 +84,20 @@ const formCreateRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
 const isValidCreateForm = ref<boolean | null>(null);
 const { required, notEmpty } = useValidationRules();
 
-async function createCategory() {
+async function createMinistry() {
     formCreateRef.value.validate();
     if (!isValidCreateForm.value) return
 
     loadingCreate.value = true;
-    const { result } = await useWrapFetch<categoryWithId>(`ministry`, {
+    const { result } = await useWrapFetch<ministryWithId>(`ministry`, {
         method: 'POST',
         body: {
-            name: createCategoryName.value
+            name: createMinistryName.value
         }
     });
     loadingCreate.value = false;
     if (result) {
-        categories.value.push(result);
+        ministries.value.push(result);
         //TODO: use this in the older pages,components,code
         formCreateRef.value.reset();
     }
@@ -115,14 +115,14 @@ async function createCategory() {
                 </tr>
             </thead>
             <tbody>
-                <tr v-for=" item in categories" :key="item.id">
+                <tr v-for=" item in ministries" :key="item.id">
                     <td>{{ item.name }}</td>
                     <td class="text-right">
-                        <v-btn @click="openEditCategoryDialog(item)" variant="text">
+                        <v-btn @click="openEditMinistryDialog(item)" variant="text">
                             <v-icon :icon="mdiPencil" color="green"></v-icon>
                         </v-btn>
 
-                        <v-btn @click="openDeleteCategoryDialog(item)" variant="text">
+                        <v-btn @click="openDeleteMinistryDialog(item)" variant="text">
                             <v-icon :icon="mdiDeleteForever" color="red"></v-icon>
                         </v-btn>
                     </td>
@@ -130,12 +130,12 @@ async function createCategory() {
                 <tr>
                     <td colspan="2">
                         <v-form v-model="isValidCreateForm" ref="formCreateRef" class="flex">
-                            <v-text-field v-model="createCategoryName" label="new ministry" required
+                            <v-text-field v-model="createMinistryName" label="new ministry" required
                                 :disabled="loadingCreate" variant="underlined"
                                 :rules="[required('Ministry'), notEmpty('Ministry')]">
                             </v-text-field>
                             <v-card-actions>
-                                <v-btn @click="createCategory" variant="text" :disabled="loadingCreate"
+                                <v-btn @click="createMinistry" variant="text" :disabled="loadingCreate"
                                     :loading="loadingCreate">
                                     <v-icon :icon="mdiPlusBox" color="green" size="large"></v-icon>
                                 </v-btn>
@@ -145,17 +145,17 @@ async function createCategory() {
                 </tr>
             </tbody>
         </v-table>
-        <template v-if="editDialogCategory">
-            <Dialog :dialogValue="editDialogCategory.name" @close="editDialogCategory = null"
-                @GreenBtnClick="editCategory" title="Edit Ministry:" :loading="loadingEditDelete">
-                <v-text-field v-model="editDialogCategory.name" label="Ministry">
+        <template v-if="editDialogMinistry">
+            <Dialog :dialogValue="editDialogMinistry.name" @close="editDialogMinistry = null"
+                @GreenBtnClick="editMinistry" title="Edit Ministry:" :loading="loadingEditDelete">
+                <v-text-field v-model="editDialogMinistry.name" label="Ministry">
                 </v-text-field>
             </Dialog>
         </template>
-        <template v-if="deleteDialogCategory">
-            <Dialog :dialogValue="deleteDialogCategory.name" @close="deleteDialogCategory = null"
-                @GreenBtnClick="deleteCategory" btn-green-text="Delete" btn-red-text="Cancel"
-                :title="`Delete ministry '${deleteDialogCategory.name}'`"
+        <template v-if="deleteDialogMinistry">
+            <Dialog :dialogValue="deleteDialogMinistry.name" @close="deleteDialogMinistry = null"
+                @GreenBtnClick="deleteMinistry" btn-green-text="Delete" btn-red-text="Cancel"
+                :title="`Delete ministry '${deleteDialogMinistry.name}'`"
                 subTitle="and all it's products and institutions" :loading="loadingEditDelete">
             </Dialog>
         </template>

@@ -51,3 +51,9 @@ export type categoryI = {
 export type categoryWithId = categoryI & {
   id: string;
 };
+export type ministryI = {
+  name: string;
+};
+export type ministryWithId = ministryI & {
+  id: string;
+};
