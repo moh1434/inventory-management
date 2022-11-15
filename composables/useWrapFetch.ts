@@ -19,7 +19,7 @@ export async function useWrapFetch<response>(
     opts.baseURL = config.public.baseURL;
   }
   opts.credentials = "include";
-  console.log(opts.credentials);
+
   const theResponse = await tryCatch<response>(async () => $fetch(url, opts));
   if (alertTypeWhenError && theResponse.error) {
     // if (theResponse.error.response.status == 401) {
