@@ -13,7 +13,7 @@ async function onLogoutClick() {
 
     await logout()
 
-    await navigateTo({ name: 'index' })
+    await navigateTo({ name: "login" });
   }
   catch (error) {
     console.error(error)
