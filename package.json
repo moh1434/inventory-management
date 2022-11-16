@@ -10,9 +10,11 @@
   "devDependencies": {
     "@mdi/js": "^7.0.96",
     "nuxt": "^3.0.0-rc.13",
+    "@types/clone-deep": "^4.0.1",
     "vite-plugin-vuetify": "^1.0.0"
   },
   "dependencies": {
+    "clone-deep": "^4.0.1",
     "vuetify": "^3.0.1"
   }
 }
