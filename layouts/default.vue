@@ -49,8 +49,8 @@ const drawer = ref<boolean | null>(null);
           </template>
           <template v-else>
             <!--normal user-->
-            <v-list-item :disabled="form.pending" :to="{ name: 'products' }">
-              Products
+            <v-list-item :disabled="form.pending" :to="{ name: 'my-products' }">
+              My Products
             </v-list-item>
           </template>
           <v-list-item :disabled="form.pending" @click="onLogoutClick">
