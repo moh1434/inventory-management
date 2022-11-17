@@ -23,7 +23,7 @@ const initialForm = (): { data: productWithUploadImages, pending: boolean } => (
         description: '',
 
         images: [],
-        newImages: [],
+        imageFiles: [],
         items: [],
 
         institutionId: '',
@@ -42,7 +42,7 @@ if (config.public.isDebug) {
         description: 'product desc',
 
         images: [],
-        newImages: [],
+        imageFiles: [],
         items: [{
             code: 'Qwe',
             id: 'test-id',
@@ -65,7 +65,7 @@ if (config.public.isDebug) {
 
 //
 function updateImagesByUpload($event: File[]) {
-    form.value.data.newImages = $event;
+    form.value.data.imageFiles = $event;
 }
 //
 
@@ -80,7 +80,7 @@ async function onCreateProductClick() {
     const body = {
         name: form.value.data.name,
         description: form.value.data.description,
-        newImages: form.value.data.newImages,
+        imageFiles: form.value.data.imageFiles,
         categoryId: form.value.data.categoryId,
         items: ([] as { code: string, status: itemStatusI }[]),
     };

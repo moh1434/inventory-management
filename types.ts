@@ -81,9 +81,9 @@ export type productWithId = productI & {
 };
 
 export type productWithIdAndUploadImages = productTransformedWithId & {
-  newImages: File[];
+  imageFiles: File[];
 };
-export type productWithUploadImages = productI & { newImages: File[] };
+export type productWithUploadImages = productI & { imageFiles: File[] };
 
 type count = number;
 export type itemsByStatus = {

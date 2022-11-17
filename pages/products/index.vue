@@ -45,7 +45,7 @@ function updateImagesLinks($event: string[]) {
 function updateImagesByUpload($event: File[]) {
     if (!editDialogProduct.value) return; //only for ts
 
-    editDialogProduct.value.newImages = $event;
+    editDialogProduct.value.imageFiles = $event;
 }
 
 const formEditRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
@@ -55,11 +55,11 @@ const loadingEditDelete = ref(false);
 
 const editDialogProduct = ref<productWithIdAndUploadImages | null>(null);
 function openEditProductDialog(product: productTransformedWithId) {
-    editDialogProduct.value = { ...cloneDeep(product), newImages: [] };
+    editDialogProduct.value = { ...cloneDeep(product), imageFiles: [] };
 }
 
 //TODO: backend: PATCH products/id not return like GET products/id, items are not returned.
-//in backend PATCH products/id add upload image from {newImages: File[]}
+//in backend PATCH products/id add upload image from {imageFiles: File[]}
 // DELETE products/id return Internal server error
 async function editProduct() {
     if (!editDialogProduct.value) return;
