@@ -80,11 +80,19 @@ export type productWithId = productI & {
   id: string;
 };
 
+export type productWithIdAndUploadImages = productTransformedWithId & {
+  newImages: File[];
+};
+export type productWithUploadImages = productI & { newImages: File[] };
+
 type count = number;
 export type itemsByStatus = {
   [statusKey in itemStatusI]: count;
 };
-export type productTransformedI = productWithId & {
+
+type productTransform = {
   itemsByStatus: itemsByStatus;
 };
+export type productTransformedI = productI & productTransform;
+export type productTransformedWithId = productWithId & productTransform;
 //

@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { mdiPencil, mdiDeleteForever, mdiPlusBox, mdiPlayBoxOutline } from '@mdi/js';
 import { Ref } from 'nuxt/dist/app/compat/capi';
-import { productTransformedI, productWithId, vuetifyFormI } from '~~/types';
+import { productTransformedWithId, productWithId, productWithIdAndUploadImages, vuetifyFormI } from '~~/types';
 import cloneDeep from "clone-deep";
 
 //admin can not add a product, so there is no point to allow him to access this page(because he don't have products). also guests can't.
@@ -23,7 +23,7 @@ useWrapFetch<productWithId[]>('/products/me').then(({ result }) => {
     products.value[0]
 });
 const productsTransformed = computed(() => {
-    const productsTransformed: productTransformedI[] = cloneDeep(products.value) as any[];
+    const productsTransformed: productTransformedWithId[] = cloneDeep(products.value) as any[];
     products.value.forEach((product, index) => {
         productsTransformed[index].description = productsTransformed[index].description.slice(0, 32);
         if (!productsTransformed[index].itemsByStatus) {
@@ -37,8 +37,9 @@ const productsTransformed = computed(() => {
 })
 //
 function updateImagesLinks($event: string[]) {
+    console.log('images', $event);
     if (!editDialogProduct.value) return; //only for ts
-
+    console.log('1')
     editDialogProduct.value.images = $event;
 }
 function updateImagesByUpload($event: File[]) {
@@ -51,10 +52,10 @@ const formEditRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
 const isValidEditForm = ref<boolean | null>(null);
 
 const loadingEditDelete = ref(false);
-type productWithIdAndUploadImages = productTransformedI & { newImages: File[] };
+
 const editDialogProduct = ref<productWithIdAndUploadImages | null>(null);
-function openEditProductDialog(product: productTransformedI) {
-    editDialogProduct.value = { ...product, newImages: [] };
+function openEditProductDialog(product: productTransformedWithId) {
+    editDialogProduct.value = { ...cloneDeep(product), newImages: [] };
 }
 
 //TODO: backend: PATCH products/id not return like GET products/id, items are not returned.
@@ -118,34 +119,15 @@ async function deleteProduct() {
 }
 //
 
-const createProductName = ref('');
+const isOpenCreateDialog = ref<boolean>(false);
 
-const loadingCreate = ref(false);
-
-const formCreateRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
-const isValidCreateForm = ref<boolean | null>(null);
-const { required, notEmpty } = useValidationRules();
-
-async function createProduct() {
-    formCreateRef.value.validate();
-    if (!isValidCreateForm.value) return
-
-    loadingCreate.value = true;
-    const { result } = await useWrapFetch<productWithId>(`products`, {
-        method: 'POST',
-        body: {
-            name: createProductName.value
-        }
-    });
-    loadingCreate.value = false;
-    if (result) {
-        products.value.push(result);
-        //TODO: use this in the older pages,components,code
-        formCreateRef.value.reset();
-    }
+function onProductCreated($event: productWithId) {
+    const createdInstitution = $event;
+    if (!createdInstitution) return;
+    products.value.push($event);
+    isOpenCreateDialog.value = false;
 }
-
-
+//
 </script>
 
 <template>
@@ -204,24 +186,19 @@ async function createProduct() {
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2">
-                        <v-form v-model="isValidCreateForm" ref="formCreateRef" class="flex">
-                            <v-text-field v-model="createProductName" label="new product" required
-                                :disabled="loadingCreate" variant="underlined"
-                                :rules="[required('Product'), notEmpty('Product')]">
-                            </v-text-field>
-                            <v-card-actions>
-                                <v-btn @click="createProduct" variant="text" :disabled="loadingCreate"
-                                    :loading="loadingCreate">
-                                    <v-icon :icon="mdiPlusBox" color="green" size="large"></v-icon>
-                                </v-btn>
-                            </v-card-actions>
-                        </v-form>
+                    <td colspan="5"></td>
+                    <td class="text-center">
+                        <v-btn @click="isOpenCreateDialog = true" variant="text">
+                            <v-icon :icon="mdiPlusBox" color="green" size="large"></v-icon>
+                        </v-btn>
                     </td>
                 </tr>
             </tbody>
         </v-table>
-        {{ editDialogProduct }}a
+        <v-dialog v-model="isOpenCreateDialog" max-width="660">
+            <!-- TODO:migrate FormProduct file code, right now its just a clone of FormInstitution -->
+            <FormProduct @success="onProductCreated" class="w-full" />
+        </v-dialog>
         <template v-if="editDialogProduct">
             <Dialog :dialogValue="editDialogProduct.name" @close="editDialogProduct = null" @GreenBtnClick="editProduct"
                 title="Edit Product:" :loading="loadingEditDelete" :maxWidth="560">
@@ -255,6 +232,10 @@ async function createProduct() {
     .mobile-w {
         min-width: 80px;
     }
+}
+
+.w-full {
+    width: 100%;
 }
 
 .flex {

@@ -47,6 +47,12 @@ const drawer = ref<boolean | null>(null);
               Institutions
             </v-list-item>
           </template>
+          <template v-else>
+            <!--normal user-->
+            <v-list-item :disabled="form.pending" :to="{ name: 'products' }">
+              Products
+            </v-list-item>
+          </template>
           <v-list-item :disabled="form.pending" @click="onLogoutClick">
             Logout
           </v-list-item>

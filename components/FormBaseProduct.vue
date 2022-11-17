@@ -54,34 +54,26 @@ watch(imagesToUpload, () => {
     emit('update:imagesToUpload', imagesToUpload.value);
 })
 
-function updateItemCode(code: string, item: itemWithID) {
-    const items = cloneDeep(props.product.items)
-    items.some(it => {
-        if (it.id === item.id) {
-            it.code = code;
-            return true;
-        }
-    });
+function updateItemCode(code: string, index: number) {
+    const items = cloneDeep(props.product.items);
+    items[index].code = code;
 
     emit('update:items', items);
 }
-function updateItemStatus(status: itemStatusI, item: itemWithID) {
+function updateItemStatus(status: itemStatusI, index: number) {
     const items = cloneDeep(props.product.items)
     console.log('status', status);
-    items.some(it => {
-        if (it.id === item.id) {
-            it.status = status;
-            return true;
-        }
-    });
+    items[index].status = status;
     console.log('items', items);
     emit('update:items', items);
 }
 
 function deleteImage(index: number) {
-    const imagesAfterDelete = [...props.product.images].splice(index, 1);
-    if (imagesAfterDelete.length !== props.product.images.length) return;
-
+    const imagesAfterDelete = [...props.product.images];
+    imagesAfterDelete.splice(index, 1);
+    console.log('22', imagesAfterDelete, props.product.images, index)
+    if (imagesAfterDelete.length == props.product.images.length) return;
+    console.log('11');
     emit('update:images', imagesAfterDelete);
 }
 </script>
@@ -99,16 +91,16 @@ function deleteImage(index: number) {
         </v-select>
         <!-- <v-select :items="institutionsVuetify" :model-value="product.institutionId"
             @change="emit('update:institutionId', $event)"></v-select> -->
-        <!-- <div  class="flex"> -->
+        <!-- <div  class="flex justify-evenly"> -->
         <!-- loop through the images, display <img> for each image. with delete ability -->
 
         <v-card class="mb-5">
             <v-card-title>Images</v-card-title>
-            <div class="flex">
+            <div class="flex justify-evenly">
                 <v-card-item v-for="(image, index) in product.images" :key="index" class="text-center">
                     <v-img class="relative" :src="image" alt="no image" min-width="100" />
-                    <v-btn class="img-btn" size="small" variant="tonal">
-                        <v-icon :icon="mdiDeleteForever" color="red" @click="deleteImage(index)"></v-icon>
+                    <v-btn class="img-btn" size="small" variant="tonal" @click="deleteImage(index)">
+                        <v-icon :icon="mdiDeleteForever" color="red"></v-icon>
                     </v-btn>
                 </v-card-item>
             </div>
@@ -117,13 +109,25 @@ function deleteImage(index: number) {
             </v-file-input>
             <!-- also we need create image ability, <v-file-input>, <v-btn upload image and return url component>upload</v-btn> -->
         </v-card>
-        <v-list>
-            <v-list-item-title>Items:</v-list-item-title>
-            <v-list-item v-for="item in product.items" :key="item.id">
-                <form-item :code="item.code" :status="item.status" @update:code="updateItemCode($event, item)"
-                    @update:status="updateItemStatus($event, item)" class="flex gap-2" />
-            </v-list-item>
-        </v-list>
+        <v-card>
+            <v-card-title>Items:</v-card-title>
+            <v-card-item>
+                <!-- don't use item.id as a :key because when create a new products, all items will have id='' -->
+                <form-item v-for="(item, index) in product.items" :key="index" :code="item.code" :status="item.status"
+                    @update:code="updateItemCode($event, index)" @update:status="updateItemStatus($event, index)"
+                    class="flex justify-evenly gap-2" />
+                <div class="flex items-center justify-start -mt-4">
+                    <v-btn @click="product.items.push({ code: '', id: '', productId: '', status: 'NEW' })"
+                        variant="text">
+                        <v-icon :icon="mdiPlusBox" color="green" size="large"></v-icon>
+                    </v-btn>
+                    <v-btn v-if="product.items.length > 1" @click="product.items.splice(product.items.length - 1, 1)"
+                        variant="text" size="large">
+                        <v-icon :icon="mdiDeleteForever" color="red"></v-icon>
+                    </v-btn>
+                </div>
+            </v-card-item>
+        </v-card>
     </div>
 </template>
 
@@ -131,11 +135,26 @@ function deleteImage(index: number) {
 .flex {
     display: flex;
     flex-wrap: wrap;
+}
+
+.justify-evenly {
     justify-content: space-evenly;
 }
 
+.items-center {
+    align-items: center;
+}
+
+.justify-start {
+    justify-content: end !important;
+
+}
 
 .gap-2 {
     gap: 4px;
+}
+
+.-mt-4 {
+    margin-top: -20px;
 }
 </style>
