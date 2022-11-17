@@ -52,6 +52,9 @@ const drawer = ref<boolean | null>(null);
             <v-list-item :disabled="form.pending" :to="{ name: 'my-products' }">
               My Products
             </v-list-item>
+            <v-list-item :disabled="form.pending" :to="{ name: 'products' }">
+              Search Product
+            </v-list-item>
           </template>
           <v-list-item :disabled="form.pending" @click="onLogoutClick">
             Logout
