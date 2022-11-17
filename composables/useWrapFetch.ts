@@ -10,7 +10,7 @@ export async function useWrapFetch<response>(
   // const authHeader = `Bearer ${useToken().token.value}`;
   opts.headers = Object.assign(opts.headers, {
     ...(useRequestHeaders(["cookie"]) as HeadersInit),
-    "Content-Type": "application/json",
+    // "Content-Type": "application/json", //if you return this header, you will not be able to upload image in FormOroducts.vue onCreateProductClick()
   });
 
   //

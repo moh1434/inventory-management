@@ -77,19 +77,23 @@ async function onCreateProductClick() {
     if (!formRef.value.validate()) return
 
     form.value.pending = true
-    const body = {
-        name: form.value.data.name,
-        description: form.value.data.description,
-        imageFiles: form.value.data.imageFiles,
-        categoryId: form.value.data.categoryId,
-        items: ([] as { code: string, status: itemStatusI }[]),
-    };
-    form.value.data.items.forEach(item => {
-        body.items.push({ code: item.code, status: item.status })
+
+    const formData = new FormData();
+    form.value.data.imageFiles.forEach(image => {
+        formData.append("imageFiles", image);
     })
+    formData.append("name", form.value.data.name);
+    formData.append("description", form.value.data.description);
+    formData.append("categoryId", form.value.data.categoryId);
+
+    form.value.data.items.forEach((item, i) => {
+        formData.append(`items[${i}][code]`, item.code);
+        formData.append(`items[${i}][status]`, item.status);
+    })
+
     const { result } = await useWrapFetch<productWithId>('products', {
         method: "POST",
-        body: body
+        body: formData
     });
     form.value.pending = false
     if (!result) return;
