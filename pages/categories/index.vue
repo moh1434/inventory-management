@@ -80,13 +80,14 @@ const createCategoryName = ref('');
 
 const loadingCreate = ref(false);
 
-const formCreateRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
+const formRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
 const isValidCreateForm = ref<boolean | null>(null);
 const { required, notEmpty } = useValidationRules();
 
 async function createCategory() {
-    formCreateRef.value.validate();
-    if (!isValidCreateForm.value) return
+
+    const isValid = await formRef.value.validate();
+    if (!isValid.valid) return
 
     loadingCreate.value = true;
     const { result } = await useWrapFetch<categoryWithId>(`category`, {
@@ -99,7 +100,7 @@ async function createCategory() {
     if (result) {
         categories.value.push(result);
         //TODO: use this in the older pages,components,code
-        formCreateRef.value.reset();
+        formRef.value.reset();
     }
 }
 </script>
@@ -129,7 +130,7 @@ async function createCategory() {
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <v-form v-model="isValidCreateForm" ref="formCreateRef" class="flex">
+                        <v-form v-model="isValidCreateForm" ref="formRef" class="flex">
                             <v-text-field v-model="createCategoryName" label="new category" required
                                 :disabled="loadingCreate" variant="underlined"
                                 :rules="[required('Category'), notEmpty('Category')]">

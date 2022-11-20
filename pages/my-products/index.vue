@@ -50,8 +50,7 @@ function updateImagesByUpload($event: File[]) {
     editDialogProduct.value.imageFiles = $event;
 }
 
-const formEditRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
-const isValidEditForm = ref<boolean | null>(null);
+const formRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
 
 const loadingEditDelete = ref(false);
 
@@ -66,8 +65,8 @@ function openEditProductDialog(product: productTransformedWithId) {
 async function editProduct() {
     if (!editDialogProduct.value) return;
 
-    console.log('1', formEditRef.value);
-    if (!formEditRef.value.validate()) return
+    const isValid = await formRef.value.validate();
+    if (!isValid.valid) return
     console.log('2', editDialogProduct.value?.id);
     loadingEditDelete.value = true;
     const index = products.value.findIndex(product => product.id === editDialogProduct.value?.id);
@@ -218,7 +217,7 @@ function onProductCreated($event: productWithId) {
         <template v-if="editDialogProduct">
             <Dialog :dialogValue="editDialogProduct.name" @close="editDialogProduct = null" @GreenBtnClick="editProduct"
                 title="Edit Product:" :loading="loadingEditDelete" :maxWidth="560">
-                <v-form ref="formEditRef" v-model="isValidEditForm">
+                <v-form ref="formRef">
                     <!--  @update:institution-id="editDialogProduct?.institutionId" -->
                     <FormBaseProduct :product="editDialogProduct"
                         @update:description="editDialogProduct.description = $event"

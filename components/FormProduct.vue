@@ -1,6 +1,8 @@
 <script setup lang='ts'>
-import { productWithUploadImages } from '~~/types';
-import { productWithId, itemStatusI } from '../types';
+import { Ref } from 'vue';
+
+import { FormBaseProduct } from '~~/.nuxt/components';
+import { productWithUploadImages, vuetifyFormI, productWithId } from '~~/types';
 
 interface Props {
     loading?: boolean;
@@ -13,7 +15,8 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits(['success'])
 
 const config = useRuntimeConfig();
-const formRef = ref<any>(null); //vuetify <v-form ref="formRef"
+
+const formRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
 const isValidForm = ref(null);
 
 
@@ -56,8 +59,8 @@ if (config.public.isDebug) {
     }
 
     onMounted(() => {
-        setTimeout(() => {
-            formRef.value.validate();
+        setTimeout(async () => {
+            await formRef.value.validate();
         }, 1);
     });
 
@@ -74,7 +77,8 @@ function updateImagesByUpload($event: File[]) {
 //category id,
 // images
 async function onCreateProductClick() {
-    if (!formRef.value.validate()) return
+    const isValid = await formRef.value.validate();
+    if (!isValid.valid) return
 
     form.value.pending = true
 

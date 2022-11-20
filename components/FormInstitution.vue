@@ -1,5 +1,7 @@
 <script setup lang='ts'>
+import { Ref } from 'nuxt/dist/app/compat/capi';
 import { institutionFormI, institutionResponseI, ministryWithId } from '~~/types';
+import { vuetifyFormI } from '../types';
 
 interface Props {
     loading?: boolean;
@@ -12,8 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits(['success'])
 
 const config = useRuntimeConfig();
-const formRef = ref<any>(null); //vuetify <v-form ref="formRef"
-const isValidForm = ref(null);
+const formRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>; //vuetify <v-form ref="formRef"
 
 const initialForm = (): { data: institutionFormI, pending: boolean } => ({
     data: {
@@ -49,8 +50,8 @@ if (config.public.isDebug) {
     }
 
     onMounted(() => {
-        setTimeout(() => {
-            formRef.value.validate();
+        setTimeout(async () => {
+            await formRef.value.validate();
         }, 1);
     });
 
@@ -69,8 +70,8 @@ useWrapFetch<ministryWithId[]>('ministry').then(({ result }) => {
 });
 
 async function onCreateInstitutionClick() {
-    formRef.value.validate();
-    if (!isValidForm.value) return
+    const isValid = await formRef.value.validate();
+    if (!isValid.valid) return
 
     form.value.pending = true
 
@@ -108,7 +109,7 @@ const rules = {
 
 <template>
     <v-card class="mx-auto px-6 py-8 mt-14" max-width="560">
-        <v-form v-model="isValidForm" ref="formRef">
+        <v-form ref="formRef">
 
             <v-card-title class="px-0">institution data:</v-card-title>
 

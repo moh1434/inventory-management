@@ -1,10 +1,13 @@
 <script lang="ts" setup>
+import { Ref } from 'nuxt/dist/app/compat/capi';
+import { vuetifyFormI } from '~~/types';
+
 const emit = defineEmits(['success'])
 
 const { login } = useAuth()
 
 const config = useRuntimeConfig();
-const formRef = ref<any>(null); //vuetify <v-form ref="formRef"
+const formRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
 const isValidForm = ref(null);
 const form = reactive({
   data: {
@@ -15,8 +18,8 @@ const form = reactive({
 })
 
 async function onLoginClick() {
-  formRef.value.validate();
-  if (!isValidForm.value) return
+  const isValid = await formRef.value.validate();
+  if (!isValid.valid) return;
 
   form.pending = true
 

@@ -30,8 +30,7 @@ function onCreatedInstitution($event: institutionWithIdI) {
 
 //
 
-const formEditRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
-const isValidEditForm = ref<boolean | null>(null);
+const formRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
 
 const loadingEditDelete = ref(false);
 const editDialogInstitution = ref<institutionWithIdI | null>(null);
@@ -39,8 +38,8 @@ function openEditInstitutionDialog(institution: institutionWithIdI) {
     editDialogInstitution.value = { ...institution };
 }
 async function editInstitution() {
-    formEditRef.value.validate();
-    if (!isValidEditForm.value) return
+    const isValid = await formRef.value.validate();
+    if (!isValid.valid) return
 
     loadingEditDelete.value = true;
     const targetInstitution = institutions.value.find(institution => institution.id === editDialogInstitution.value?.id);
@@ -153,7 +152,7 @@ async function deleteInstitution() {
         <template v-if="editDialogInstitution">
             <Dialog :dialogValue="editDialogInstitution.name" @close="editDialogInstitution = null"
                 @GreenBtnClick="editInstitution" title="Edit Institution:" :loading="loadingEditDelete">
-                <v-form ref="formEditRef" v-model="isValidEditForm">
+                <v-form ref="formRef">
                     <!-- ignore TS, i have  <template v-if="editDialogInstitution"> -->
                     <FormBaseInstitution :institution="editDialogInstitution"
                         @name="editDialogInstitution.name = $event" @city="editDialogInstitution.city = $event"

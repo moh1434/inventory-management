@@ -43,7 +43,8 @@ const selectedFilters = ref({
 
 async function searchProducts() {
     console.log(selectedFilters.value);
-    if (!formRef.value.validate()) return;
+    const isValid = await formRef.value.validate();
+    if (!isValid.valid) return
     loading.value = true;
     const query = {} as {
         productName?: string,

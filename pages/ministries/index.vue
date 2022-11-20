@@ -80,13 +80,13 @@ const createMinistryName = ref('');
 
 const loadingCreate = ref(false);
 
-const formCreateRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
+const formRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
 const isValidCreateForm = ref<boolean | null>(null);
 const { required, notEmpty } = useValidationRules();
 
 async function createMinistry() {
-    formCreateRef.value.validate();
-    if (!isValidCreateForm.value) return
+    const isValid = await formRef.value.validate();
+    if (!isValid.valid) return
 
     loadingCreate.value = true;
     const { result } = await useWrapFetch<ministryWithId>(`ministry`, {
@@ -99,7 +99,7 @@ async function createMinistry() {
     if (result) {
         ministries.value.push(result);
         //TODO: use this in the older pages,components,code
-        formCreateRef.value.reset();
+        formRef.value.reset();
     }
 }
 </script>
@@ -129,7 +129,7 @@ async function createMinistry() {
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <v-form v-model="isValidCreateForm" ref="formCreateRef" class="flex">
+                        <v-form ref="formRef" class="flex">
                             <v-text-field v-model="createMinistryName" label="new ministry" required
                                 :disabled="loadingCreate" variant="underlined"
                                 :rules="[required('Ministry'), notEmpty('Ministry')]">
