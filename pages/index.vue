@@ -29,7 +29,7 @@ const items = ref([
     message: `استناداً الى توجيهات الأمانة العامة لمجلس الوزراء وبالتعاون مع وزارة الصناعة / الشركة العامة
                   للانظمة الالكترونية تم اعداد نظام المواد الراكدة وبطيئة الحركة للاستفادة من المواد المتوفرة في
                   المؤسسات والشركات في عموم العراق`,
-    color: 'green-lighten-1',
+    color: 'green',
     icon: mdiAirballoon,
   },
   // {
@@ -73,13 +73,13 @@ const items = ref([
         </v-card-text>
       </v-card> -->
 
-      <v-img height="500" src="imgs/home_img.jpg" class="text-white" />
+      <v-img height="500" src="imgs/home_img.jpg" />
 
       <div class="mt-10">
         <v-timeline align="start">
           <v-timeline-item v-for="(item, i) in items" :key="i" :dot-color="item.color" :icon="item.icon" fill-dot>
             <v-card class="timeline-width">
-              <v-card-title :class="['text-h5', `bg-${item.color}`, 'text-black']">
+              <v-card-title :class="['text-h5', `bg-${item.color}`]">
                 {{ item.title }}
               </v-card-title>
               <v-card-text class="bg-white text--primary text-h6 py-4 line-height">
