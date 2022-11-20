@@ -166,11 +166,20 @@ function onProductCreated($event: productWithId) {
                         <v-img :src="product.images[0]" alt="no image" class="mobile-w" />
                     </td>
                     <td>
-                        <v-list>
-                            <v-list-item class="text-center">New: {{ product.itemsByStatus['NEW'] }}</v-list-item>
-                            <v-list-item class="text-center">Used: {{ product.itemsByStatus['USED'] }}</v-list-item>
-                            <v-list-item class="text-center">Broken: {{ product.itemsByStatus['BROKEN'] }}</v-list-item>
-                            <v-list-item class="text-center">Total: {{ product.items.length }}</v-list-item>
+                        <!-- TODO: make all tables responsive -->
+                        <v-list class="min-width-80" density="compact">
+                            <v-list-item density="compact" class="text-center px-1">New: {{ product.itemsByStatus['NEW']
+                            }}
+                            </v-list-item>
+                            <v-list-item density="compact" class="text-center px-1">Used: {{
+                                    product.itemsByStatus['USED']
+                            }}
+                            </v-list-item>
+                            <v-list-item density="compact" class="text-center px-1">Broken: {{
+                                    product.itemsByStatus['BROKEN']
+                            }}</v-list-item>
+                            <v-list-item density="compact" class="text-center px-1">Total: {{ product.items.length }}
+                            </v-list-item>
                         </v-list>
                     </td>
                     <td class="text-center">
@@ -238,6 +247,10 @@ function onProductCreated($event: productWithId) {
 
 .w-full {
     width: 100%;
+}
+
+.min-width-80 {
+    min-width: 90px;
 }
 
 .flex {
