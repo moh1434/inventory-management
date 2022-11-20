@@ -85,6 +85,9 @@ async function editProduct() {
     editDialogProduct.value.imageFiles.forEach((image: File) => {
         formData.append("imageFiles", image);
     })
+    editDialogProduct.value.images.forEach((imageStr, i) => {
+        formData.append(`images[${i}]`, imageStr);
+    });
     formData.append("name", editDialogProduct.value.name);
     formData.append("description", editDialogProduct.value.description);
     formData.append("categoryId", editDialogProduct.value.categoryId);
