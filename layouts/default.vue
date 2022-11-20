@@ -29,6 +29,12 @@ const drawer = ref<boolean | null>(null);
 
 <template>
   <v-app id="inspire">
+
+    <Head>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@500&display=swap" rel="stylesheet">
+    </Head>
     <AlertHandler></AlertHandler>
     <v-navigation-drawer v-model="drawer">
       <v-list>
@@ -81,3 +87,8 @@ const drawer = ref<boolean | null>(null);
     </v-main>
   </v-app>
 </template>
+<style>
+body {
+  font-family: 'Alexandria', sans-serif !important;
+}
+</style>

@@ -43,7 +43,7 @@ const rules = {
 </script>
 
 <template>
-  <v-card class="mx-auto px-6 py-8 mt-14" max-width="344">
+  <v-card class="mx-auto px-6 py-8 mt-14" max-width="500">
     <v-form v-model="isValidForm" ref="formRef">
       <v-text-field v-model="form.data.username" class="mb-2" :rules="rules.username" required label="Username">
       </v-text-field>

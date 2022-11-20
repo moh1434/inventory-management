@@ -27,5 +27,6 @@ async function onLoginSuccess() {
   margin-top: 20px;
   margin-left: auto;
   margin-right: auto;
+  width: 550px;
 }
 </style>

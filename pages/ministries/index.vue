@@ -105,7 +105,7 @@ async function createMinistry() {
 </script>
 
 <template>
-    <v-card class="mx-auto px-6 py-8 mt-14" max-width="460">
+    <v-card class="mx-auto px-6 py-8 mt-14">
         <v-table>
             <thead>
                 <tr>
