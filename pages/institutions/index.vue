@@ -42,9 +42,9 @@ async function editInstitution() {
     if (!isValid.valid) return
 
     loadingEditDelete.value = true;
-    const targetInstitution = institutions.value.find(institution => institution.id === editDialogInstitution.value?.id);
+    const index = institutions.value.findIndex(institution => institution.id === editDialogInstitution.value?.id);
 
-    if (!targetInstitution || editDialogInstitution.value?.name === targetInstitution?.name) {
+    if (index == -1) {
         loadingEditDelete.value = false;
         editDialogInstitution.value = null;
         return;
@@ -56,8 +56,8 @@ async function editInstitution() {
     });
     loadingEditDelete.value = false;
     if (result) {
-        Object.assign(targetInstitution, result);
-        formEditRef.value.reset();
+        Object.assign(institutions.value[index], result);
+        formRef.value.reset();
         editDialogInstitution.value = null;
     }
 
