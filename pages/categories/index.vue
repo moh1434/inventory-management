@@ -147,7 +147,7 @@ async function createCategory() {
             </tbody>
         </v-table>
         <template v-if="editDialogCategory">
-            <Dialog :dialogValue="editDialogCategory.name" @close="editDialogCategory = null"
+            <Dialog :dialogValue="editDialogCategory.name" @btn-red-click="editDialogCategory = null"
                 @GreenBtnClick="editCategory" title="Edit Category:" :loading="loadingEditDelete">
                 <v-text-field v-model="editDialogCategory.name" label="Category">
                 </v-text-field>
@@ -155,7 +155,7 @@ async function createCategory() {
         </template>
         <template v-if="deleteDialogCategory">
             <Dialog :dialogValue="deleteDialogCategory.name" @green-btn-click="deleteDialogCategory = null"
-                @close="deleteCategory" btn-green-text="Cancel" btn-red-text="Delete"
+                @btn-red-click="deleteCategory" btn-green-text="Cancel" btn-red-text="Delete"
                 :title="`Delete category '${deleteDialogCategory.name}'`" subTitle="and all it's products"
                 :loading="loadingEditDelete">
             </Dialog>

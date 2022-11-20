@@ -146,18 +146,19 @@ async function createMinistry() {
             </tbody>
         </v-table>
         <template v-if="editDialogMinistry">
-            <Dialog :dialogValue="editDialogMinistry.name" @close="editDialogMinistry = null"
+            <Dialog :dialogValue="editDialogMinistry.name" @btn-red-click="editDialogMinistry = null"
                 @GreenBtnClick="editMinistry" title="Edit Ministry:" :loading="loadingEditDelete">
                 <v-text-field v-model="editDialogMinistry.name" label="Ministry">
                 </v-text-field>
             </Dialog>
         </template>
         <template v-if="deleteDialogMinistry">
-            <Dialog :dialogValue="deleteDialogMinistry.name" @close="deleteDialogMinistry = null"
-                @GreenBtnClick="deleteMinistry" btn-green-text="Delete" btn-red-text="Cancel"
+            <Dialog :dialogValue="deleteDialogMinistry.name" @green-btn-click="deleteDialogMinistry = null"
+                @btn-red-click="deleteMinistry" btn-green-text="Cancel" btn-red-text="Delete"
                 :title="`Delete ministry '${deleteDialogMinistry.name}'`"
                 subTitle="and all it's products and institutions" :loading="loadingEditDelete">
             </Dialog>
+
         </template>
     </v-card>
 </template>

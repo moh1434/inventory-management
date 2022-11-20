@@ -150,7 +150,7 @@ async function deleteInstitution() {
             <FormInstitution @success="onCreatedInstitution" class="w-full" />
         </v-dialog>
         <template v-if="editDialogInstitution">
-            <Dialog :dialogValue="editDialogInstitution.name" @close="editDialogInstitution = null"
+            <Dialog :dialogValue="editDialogInstitution.name" @btn-red-click="editDialogInstitution = null"
                 @GreenBtnClick="editInstitution" title="Edit Institution:" :loading="loadingEditDelete">
                 <v-form ref="formRef">
                     <!-- ignore TS, i have  <template v-if="editDialogInstitution"> -->
@@ -163,11 +163,12 @@ async function deleteInstitution() {
             </Dialog>
         </template>
         <template v-if="deleteDialogInstitution">
-            <Dialog :dialogValue="deleteDialogInstitution.name" @close="deleteDialogInstitution = null"
-                @GreenBtnClick="deleteInstitution" btn-green-text="Delete" btn-red-text="Cancel"
+            <Dialog :dialogValue="deleteDialogInstitution.name" @green-btn-click="deleteDialogInstitution = null"
+                @btn-red-click="deleteInstitution" btn-green-text="Cancel" btn-red-text="Delete"
                 :title="`Delete institution '${deleteDialogInstitution.name}'`" subTitle="and all it's products"
                 :loading="loadingEditDelete">
             </Dialog>
+
         </template>
     </v-card>
 </template>

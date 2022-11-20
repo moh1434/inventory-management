@@ -233,8 +233,8 @@ function onProductCreated($event: productWithId) {
             <FormProduct @success="onProductCreated" class="w-full" />
         </v-dialog>
         <template v-if="editDialogProduct">
-            <Dialog :dialogValue="editDialogProduct.name" @close="editDialogProduct = null" @GreenBtnClick="editProduct"
-                title="Edit Product:" :loading="loadingEditDelete" :maxWidth="560">
+            <Dialog :dialogValue="editDialogProduct.name" @btn-red-click="editDialogProduct = null"
+                @GreenBtnClick="editProduct" title="Edit Product:" :loading="loadingEditDelete" :maxWidth="560">
                 <v-form ref="formRef">
                     <!--  @update:institution-id="editDialogProduct?.institutionId" -->
                     <FormBaseProduct :product="editDialogProduct"
@@ -247,8 +247,8 @@ function onProductCreated($event: productWithId) {
             </Dialog>
         </template>
         <template v-if="deleteDialogProduct">
-            <Dialog :dialogValue="deleteDialogProduct" @close="deleteDialogProduct = null"
-                @GreenBtnClick="deleteProduct" btn-green-text="Delete" btn-red-text="Cancel" title="Delete the product"
+            <Dialog :dialogValue="deleteDialogProduct" @green-btn-click="deleteDialogProduct = null"
+                @btn-red-click="deleteProduct" btn-green-text="Cancel" btn-red-text="Delete" title="Delete the product"
                 subTitle="and all it's products" :loading="loadingEditDelete">
             </Dialog>
         </template>
