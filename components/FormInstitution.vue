@@ -14,6 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits(['success'])
 
 const config = useRuntimeConfig();
+const isValidForm = ref(false);
 const formRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>; //vuetify <v-form ref="formRef"
 
 const initialForm = (): { data: institutionFormI, pending: boolean } => ({
