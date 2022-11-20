@@ -12,7 +12,7 @@ const emit = defineEmits<{
     (e: 'phoneNumber', newValue: string): void
     (e: 'city', newValue: string): void
     (e: 'location', newValue: string): void
-    (e: 'image', newValue: string): void
+    // (e: 'image', newValue: string): void
 }>()
 
 const { required, notEmpty, phoneNumber } = useValidationRules();
@@ -36,9 +36,9 @@ const { required, notEmpty, phoneNumber } = useValidationRules();
         </v-text-field>
 
         <!-- TODO: replace with File Input or remove it -->
-        <v-text-field :model-value="institution.image" @update:model-value="emit('image',$event)" class="mb-2" required
+        <!-- <v-text-field :model-value="institution.image" @update:model-value="emit('image',$event)" class="mb-2" required
             label="Image" :rules="[required('Image'), notEmpty('Image')]">
-        </v-text-field>
+        </v-text-field> -->
 
 
     </div>

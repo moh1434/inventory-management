@@ -111,10 +111,10 @@ async function deleteInstitution() {
                     <th class="text-left">
                         location
                     </th>
-                    <th class="text-left">
+                    <!-- <th class="text-left">
                         image
-                    </th>
-                    <th class="text-center" colspan="2">
+                    </th> -->
+                    <th class="text-center">
                         actions
                     </th>
                 </tr>
@@ -125,7 +125,7 @@ async function deleteInstitution() {
                     <td>{{ item.phoneNumber }}</td>
                     <td>{{ item.city }}</td>
                     <td>{{ item.location }}</td>
-                    <td><img :src="item.image" alt="no image" class="img-width" /></td>
+                    <!-- <td><img :src="item.image" alt="no image" class="img-width" /></td> -->
                     <td class="text-center">
                         <v-btn @click="openEditInstitutionDialog(item)" variant="text">
                             <v-icon :icon="mdiPencil" color="green"></v-icon>
@@ -137,7 +137,7 @@ async function deleteInstitution() {
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="5"></td>
+                    <td colspan="4"></td>
                     <td class="text-center">
                         <v-btn @click="isOpenCreateDialog = true" variant="text">
                             <v-icon :icon="mdiPlusBox" color="green" size="large"></v-icon>
@@ -157,8 +157,8 @@ async function deleteInstitution() {
                     <FormBaseInstitution :institution="editDialogInstitution"
                         @name="editDialogInstitution.name = $event" @city="editDialogInstitution.city = $event"
                         @phone-number="editDialogInstitution.phoneNumber = $event"
-                        @location="editDialogInstitution.location = $event"
-                        @image="editDialogInstitution.image = $event" />
+                        @location="editDialogInstitution.location = $event" />
+                    <!-- @image="editDialogInstitution.image = $event"  -->
                 </v-form>
             </Dialog>
         </template>

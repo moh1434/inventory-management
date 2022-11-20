@@ -78,11 +78,26 @@ async function editProduct() {
         return;
     }
     console.log('5');
-    const body: any = cloneDeep(editDialogProduct.value);
-    delete body['itemsByStatus'];
+    // const body: any = cloneDeep(editDialogProduct.value);
+    // delete body['itemsByStatus'];
+
+    const formData = new FormData();
+    editDialogProduct.value.imageFiles.forEach((image: File) => {
+        formData.append("imageFiles", image);
+    })
+    formData.append("name", editDialogProduct.value.name);
+    formData.append("description", editDialogProduct.value.description);
+    formData.append("categoryId", editDialogProduct.value.categoryId);
+
+    if (JSON.stringify(editDialogProduct.value.items) !== JSON.stringify(products.value[index].items)) {
+        editDialogProduct.value.items.forEach((item, i) => {
+            formData.append(`items[${i}][code]`, item.code);
+            formData.append(`items[${i}][status]`, item.status);
+        })
+    }
     const { result } = await useWrapFetch<productWithId>(`products/${editDialogProduct.value?.id}`, {
         method: 'PATCH',
-        body
+        body: formData
     });
     console.log('6');
     if (result) {
