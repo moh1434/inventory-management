@@ -84,7 +84,7 @@ const items = ref([
               <v-card-title :class="['text-h5', `bg-${item.color}`, 'text-black']">
                 {{ item.title }}
               </v-card-title>
-              <v-card-text class="bg-white text--primary text-h6 py-4">
+              <v-card-text class="bg-white text--primary text-h6 py-4 line-height">
                 {{ item.message }}
 
                 <!-- <v-btn :color="item.color" variant="outlined">
@@ -100,6 +100,10 @@ const items = ref([
 </template>
 
 <style>
+.line-height {
+  line-height: inherit !important;
+}
+
 .timeline-width {
   max-width: 900px;
   /* text-align: right; */
