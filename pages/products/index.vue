@@ -151,7 +151,12 @@ const productsTransformed = computed(() => {
                     <td>{{ product.category.name }}</td>
                     <td>{{ product.description }}</td>
                     <td>
-                        <v-img :src="product.images[0]" alt="no image" class="mobile-w" />
+                        <template v-if="product.images.length">
+                            <Image :src="product.images[0]" alt="no image" class="mobile-w" />
+                        </template>
+                        <template v-else>
+                            <span>no images</span>
+                        </template>
                     </td>
                     <td>
                         <v-list>
@@ -173,6 +178,8 @@ const productsTransformed = computed(() => {
 </template>
 
 <style scoped>
+/* TODO: union all css files, without repeat classes */
+/* make sure to use scoped if you will not union css files */
 .mobile-w {
     min-width: 80px;
     max-width: 150px;

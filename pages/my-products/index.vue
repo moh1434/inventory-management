@@ -163,7 +163,12 @@ function onProductCreated($event: productWithId) {
                     <td>{{ product.category.name }}</td>
                     <td>{{ product.description }}</td>
                     <td>
-                        <v-img :src="product.images[0]" alt="no image" class="mobile-w" />
+                        <template v-if="product.images.length">
+                            <Image :src="product.images[0]" alt="no image" class="mobile-w" />
+                        </template>
+                        <template v-else>
+                            <span>no images</span>
+                        </template>
                     </td>
                     <td>
                         <!-- TODO: make all tables responsive -->

@@ -98,7 +98,7 @@ function deleteImage(index: number) {
             <v-card-title>Images</v-card-title>
             <div class="flex justify-evenly">
                 <v-card-item v-for="(image, index) in product.images" :key="index" class="text-center">
-                    <v-img class="relative" :src="image" alt="no image" min-width="100" />
+                    <Image class="relative" :src="image" alt="no image" min-width="100" />
                     <v-btn class="img-btn" size="small" variant="tonal" @click="deleteImage(index)">
                         <v-icon :icon="mdiDeleteForever" color="red"></v-icon>
                     </v-btn>
