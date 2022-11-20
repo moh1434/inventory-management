@@ -1,7 +1,5 @@
 <script setup lang='ts'>
 import { Ref } from 'vue';
-
-import { FormBaseProduct } from '~~/.nuxt/components';
 import { productWithUploadImages, vuetifyFormI, productWithId } from '~~/types';
 
 interface Props {
