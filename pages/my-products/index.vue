@@ -127,10 +127,10 @@ async function deleteProduct() {
         return;
     }
 
-    const { result } = await useWrapFetch<productWithId>(`products/${deleteDialogProduct.value}`, {
+    const { error } = await useWrapFetch<productWithId>(`products/${deleteDialogProduct.value}`, {
         method: 'DELETE',
     });
-    if (result) {
+    if (!error) {
         products.value.splice(index, 1);
         deleteDialogProduct.value = null;
     }

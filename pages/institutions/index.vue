@@ -77,13 +77,13 @@ async function deleteInstitution() {
         return;
     }
 
-    const { result } = await useWrapFetch<institutionWithIdI>(`institution/${deleteDialogInstitution.value?.id}`, {
+    const { error } = await useWrapFetch<institutionWithIdI>(`institution/${deleteDialogInstitution.value?.id}`, {
         method: 'DELETE',
         body: {
             name: deleteDialogInstitution.value?.name
         }
     });
-    if (result) {
+    if (!error) {
         institutions.value.splice(index, 1);
         deleteDialogInstitution.value = null;
     }

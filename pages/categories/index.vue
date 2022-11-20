@@ -62,13 +62,13 @@ async function deleteCategory() {
         return;
     }
 
-    const { result } = await useWrapFetch<categoryWithId>(`category/${deleteDialogCategory.value?.id}`, {
+    const { error } = await useWrapFetch<categoryWithId>(`category/${deleteDialogCategory.value?.id}`, {
         method: 'DELETE',
         body: {
             name: deleteDialogCategory.value?.name
         }
     });
-    if (result) {
+    if (!error) {
         categories.value.splice(index, 1);
         deleteDialogCategory.value = null;
     }

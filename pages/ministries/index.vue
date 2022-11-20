@@ -62,13 +62,13 @@ async function deleteMinistry() {
         return;
     }
 
-    const { result } = await useWrapFetch<ministryWithId>(`ministry/${deleteDialogMinistry.value?.id}`, {
+    const { error } = await useWrapFetch<ministryWithId>(`ministry/${deleteDialogMinistry.value?.id}`, {
         method: 'DELETE',
         body: {
             name: deleteDialogMinistry.value?.name
         }
     });
-    if (result) {
+    if (!error) {
         ministries.value.splice(index, 1);
         deleteDialogMinistry.value = null;
     }
