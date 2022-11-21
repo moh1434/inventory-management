@@ -8,16 +8,7 @@ definePageMeta({
     middleware: ['admin-only'],
 });
 
-const categories = ref<categoryWithId[]>([]);
-
-useWrapFetch<categoryWithId[]>('category').then(({ result }) => {
-    if (!result) {
-        categories.value = [];
-        return;
-    };
-    categories.value = result;
-
-});
+const { categories } = useCategories();
 
 //
 const loadingEditDelete = ref(false);

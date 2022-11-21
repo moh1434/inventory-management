@@ -2,7 +2,7 @@
 import { mdiPencil, mdiDeleteForever, mdiPlusBox, mdiCamera } from '@mdi/js';
 import cloneDeep from 'clone-deep';
 import { institutionWithIdI, itemStatusI, productI } from '~~/types';
-import { categoryWithId, itemWithID } from '../types';
+import { itemWithID } from '../types';
 
 
 interface Props {
@@ -24,14 +24,7 @@ const emit = defineEmits<{
 const { required, notEmpty, images } = useValidationRules();
 
 // 
-const categories = ref<categoryWithId[]>([]);
-useWrapFetch<categoryWithId[]>('category').then(({ result }) => {
-    if (!result) {
-        categories.value = [];
-        return;
-    };
-    categories.value = result;
-});
+const { categories } = useCategories();
 // 
 // const institutions = ref<institutionWithIdI[]>([]);
 // useWrapFetch<institutionWithIdI[]>('institution').then(({ result }) => {
