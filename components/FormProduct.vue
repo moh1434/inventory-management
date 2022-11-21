@@ -1,5 +1,6 @@
 <script setup lang='ts'>
 import { Ref } from 'vue';
+import { productFormBuild } from '~~/helpers/productFormBulid';
 import { productWithUploadImages, vuetifyFormI, productWithId } from '~~/types';
 
 interface Props {
@@ -80,18 +81,7 @@ async function onCreateProductClick() {
 
     form.value.pending = true
 
-    const formData = new FormData();
-    form.value.data.imageFiles.forEach(image => {
-        formData.append("imageFiles", image);
-    })
-    formData.append("name", form.value.data.name);
-    formData.append("description", form.value.data.description);
-    formData.append("categoryId", form.value.data.categoryId);
-
-    form.value.data.items.forEach((item, i) => {
-        formData.append(`items[${i}][code]`, item.code);
-        formData.append(`items[${i}][status]`, item.status);
-    })
+    const formData = productFormBuild({ ...form.value.data, images: [] });
 
     const { result } = await useWrapFetch<productWithId>('products', {
         method: "POST",
