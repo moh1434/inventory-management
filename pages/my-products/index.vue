@@ -226,7 +226,6 @@ function onProductCreated($event: productWithId) {
             </tbody>
         </v-table>
         <v-dialog v-model="isOpenCreateDialog" max-width="660">
-            <!-- TODO:migrate FormProduct file code, right now its just a clone of FormInstitution -->
             <FormProduct @success="onProductCreated" class="w-full" />
         </v-dialog>
         <template v-if="editDialogProduct">

@@ -98,7 +98,6 @@ async function createMinistry() {
     loadingCreate.value = false;
     if (result) {
         ministries.value.push(result);
-        //TODO: use this in the older pages,components,code
         formRef.value.reset();
     }
 }

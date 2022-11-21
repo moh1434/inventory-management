@@ -99,7 +99,6 @@ async function createCategory() {
     loadingCreate.value = false;
     if (result) {
         categories.value.push(result);
-        //TODO: use this in the older pages,components,code
         formRef.value.reset();
     }
 }
