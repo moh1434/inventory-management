@@ -160,12 +160,7 @@ const productsTransformed = computed(() => {
                         </template>
                     </td>
                     <td>
-                        <v-list>
-                            <v-list-item class="text-center">New: {{ product.itemsByStatus['NEW'] }}</v-list-item>
-                            <v-list-item class="text-center">Used: {{ product.itemsByStatus['USED'] }}</v-list-item>
-                            <v-list-item class="text-center">Broken: {{ product.itemsByStatus['BROKEN'] }}</v-list-item>
-                            <v-list-item class="text-center">Total: {{ product.items.length }}</v-list-item>
-                        </v-list>
+                        <ItemByStatusList :items-by-status="product.itemsByStatus" />
                     </td>
                     <td class="text-center">
                         <v-btn block variant="text" :to="{ name: 'products-id', params: { 'id': product.id } }" nuxt>

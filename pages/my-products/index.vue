@@ -185,21 +185,7 @@ function onProductCreated($event: productWithId) {
                         </template>
                     </td>
                     <td>
-                        <!-- TODO: make all tables responsive -->
-                        <v-list class="min-width-80" density="compact">
-                            <v-list-item density="compact" class="text-center px-1">New: {{ product.itemsByStatus['NEW']
-                            }}
-                            </v-list-item>
-                            <v-list-item density="compact" class="text-center px-1">Used: {{
-                                    product.itemsByStatus['USED']
-                            }}
-                            </v-list-item>
-                            <v-list-item density="compact" class="text-center px-1">Broken: {{
-                                    product.itemsByStatus['BROKEN']
-                            }}</v-list-item>
-                            <v-list-item density="compact" class="text-center px-1">Total: {{ product.items.length }}
-                            </v-list-item>
-                        </v-list>
+                        <ItemByStatusList :items-by-status="product.itemsByStatus" />
                     </td>
                     <td class="text-center">
                         <v-btn block variant="text" :to="{ name: 'products-id', params: { 'id': product.id } }" nuxt>
@@ -267,9 +253,7 @@ function onProductCreated($event: productWithId) {
     width: 100%;
 }
 
-.min-width-80 {
-    min-width: 90px;
-}
+
 
 .flex {
     display: flex;
