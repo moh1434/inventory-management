@@ -8,16 +8,7 @@ definePageMeta({
     middleware: ['admin-only'],
 });
 
-const ministries = ref<ministryWithId[]>([]);
-
-useWrapFetch<ministryWithId[]>('ministry').then(({ result }) => {
-    if (!result) {
-        ministries.value = [];
-        return;
-    };
-    ministries.value = result;
-
-});
+const { ministries } = useMinistries();
 
 //
 const loadingEditDelete = ref(false);

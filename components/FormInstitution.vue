@@ -57,17 +57,7 @@ if (config.public.isDebug) {
 
 }
 
-const ministries = ref<ministryWithId[]>([]);
-
-useWrapFetch<ministryWithId[]>('ministry').then(({ result }) => {
-    if (!result) {
-        ministries.value = [];
-        return;
-    };
-    ministries.value = result;
-    // console.log('ministries', ministries.value);
-
-});
+const { ministries } = useMinistries();
 
 async function onCreateInstitutionClick() {
     const isValid = await formRef.value.validate();
