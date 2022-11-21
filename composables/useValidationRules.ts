@@ -27,6 +27,16 @@ const images = [
     "Image size should be less than 4 MB",
 ];
 
+function password(password: string) {
+  return (
+    /[A-Z]/.test(password) &&
+    /[a-z]/.test(password) &&
+    /[0-9]/.test(password) &&
+    /[^A-Za-z0-9]/.test(password) &&
+    password.length > 8
+  );
+}
+
 export const useValidationRules = () => {
-  return { required, notEmpty, phoneNumber, images };
+  return { required, notEmpty, phoneNumber, images, password };
 };

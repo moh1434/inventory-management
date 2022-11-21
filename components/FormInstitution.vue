@@ -89,7 +89,7 @@ async function onCreateInstitutionClick() {
 
 }
 
-const { required, notEmpty } = useValidationRules();
+const { required, notEmpty, password } = useValidationRules();
 const rules = {
     username: [
         required('Username'),
@@ -99,11 +99,8 @@ const rules = {
     ],
     password: [
         required('Password'),
-        (v: string) => (v && v.length > 7) || 'Password must have at least 8 characters',
-        //TODO: Fix this from backend
-        (v: string) => (v && /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(v)) ||
-            'Password must have at least 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character',
-        // (v: string) => (v && /[a-z]/.test(v)) || 'Password must have at least one lowercase letter',
+        (v: string) => (v && password(v)) ||
+            'Password must have at least 8 characters, at least one uppercase letter, one lowercase letter, one number and special character',
     ]
 }
 </script>
