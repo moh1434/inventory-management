@@ -59,9 +59,6 @@ function openEditProductDialog(product: productTransformedWithId) {
     editDialogProduct.value = { ...cloneDeep(product), imageFiles: [] };
 }
 
-//TODO: backend: PATCH products/id not return like GET products/id, items are not returned.
-//in backend PATCH products/id add upload image from {imageFiles: File[]}
-// DELETE products/id return Internal server error
 async function editProduct() {
     if (!editDialogProduct.value) return;
 

@@ -92,7 +92,6 @@ function deleteImage(index: number) {
         <!-- <v-select :items="institutionsVuetify" :model-value="product.institutionId"
             @change="emit('update:institutionId', $event)"></v-select> -->
         <!-- <div  class="flex justify-evenly"> -->
-        <!-- loop through the images, display <img> for each image. with delete ability -->
 
         <v-card class="mb-5">
             <v-card-title>Images</v-card-title>
@@ -107,7 +106,6 @@ function deleteImage(index: number) {
             <v-file-input class="mt-5 px-6" v-model="imagesToUpload" show-size multiple :rules="images"
                 accept="image/png, image/jpeg" placeholder="add image" :prepend-icon="mdiCamera" label="Add new image">
             </v-file-input>
-            <!-- also we need create image ability, <v-file-input>, <v-btn upload image and return url component>upload</v-btn> -->
         </v-card>
         <v-card>
             <v-card-title>Items:</v-card-title>

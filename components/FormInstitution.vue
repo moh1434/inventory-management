@@ -117,7 +117,6 @@ const rules = {
             <FormBaseInstitution :institution="form.data.institution" @name="form.data.institution.name = $event"
                 @city="form.data.institution.city = $event" @phone-number="form.data.institution.phoneNumber = $event"
                 @location="form.data.institution.location = $event" />
-            <!-- @image="form.data.institution.image = $event" -->
             <v-select item-title="name" item-value="id" :items="ministries" v-model="form.data.institution.ministryId"
                 required label="ministries" :rules="[required('ministry'), notEmpty('ministry')]" />
 

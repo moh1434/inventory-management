@@ -111,9 +111,6 @@ async function deleteInstitution() {
                     <th class="text-left">
                         location
                     </th>
-                    <!-- <th class="text-left">
-                        image
-                    </th> -->
                     <th class="text-center">
                         actions
                     </th>
@@ -125,7 +122,6 @@ async function deleteInstitution() {
                     <td>{{ item.phoneNumber }}</td>
                     <td>{{ item.city }}</td>
                     <td>{{ item.location }}</td>
-                    <!-- <td><img :src="item.image" alt="no image" class="img-width" /></td> -->
                     <td class="text-center">
                         <v-btn @click="openEditInstitutionDialog(item)" variant="text">
                             <v-icon :icon="mdiPencil" color="green"></v-icon>
@@ -158,7 +154,6 @@ async function deleteInstitution() {
                         @name="editDialogInstitution.name = $event" @city="editDialogInstitution.city = $event"
                         @phone-number="editDialogInstitution.phoneNumber = $event"
                         @location="editDialogInstitution.location = $event" />
-                    <!-- @image="editDialogInstitution.image = $event"  -->
                 </v-form>
             </Dialog>
         </template>
