@@ -8,15 +8,8 @@ definePageMeta({
     middleware: ['admin-only'],
 });
 
-const institutions = ref<institutionWithIdI[]>([]);
+const { institutions } = useInstitutions();
 
-useWrapFetch<institutionWithIdI[]>('institution').then(({ result }) => {
-    if (!result) {
-        institutions.value = [];
-        return;
-    };
-    institutions.value = result;
-});
 //ERP: dynamic workflow
 //
 const isOpenCreateDialog = ref<boolean>(false);

@@ -1,16 +1,10 @@
 <script setup lang='ts'>
 import { Ref } from 'nuxt/dist/app/compat/capi';
-import { categoryWithId, institutionWithIdI, productWithId, vuetifyFormI } from '~~/types';
+import { productWithId, vuetifyFormI } from '~~/types';
 import { mdiMagnify } from '@mdi/js';
 
-const institutions = ref<institutionWithIdI[]>([]);
-useWrapFetch<institutionWithIdI[]>('institution').then(({ result }) => {
-    if (!result) {
-        institutions.value = [];
-        return;
-    };
-    institutions.value = result;
-});
+const { institutions } = useInstitutions();
+
 //
 const { categories } = useCategories();
 //
