@@ -22,21 +22,6 @@ useWrapFetch<productWithId[]>('/products/me').then(({ result }) => {
     console.log('result', result);
     products.value[0]
 });
-const productsTransformed = computed(() => {
-    const productsTransformed: productTransformedWithId[] = cloneDeep(products.value) as any[];
-    products.value.forEach((product, index) => {
-        if (productsTransformed[index].description) {
-            productsTransformed[index].description = productsTransformed[index].description.slice(0, 32);
-        }
-        if (!productsTransformed[index].itemsByStatus) {
-            productsTransformed[index]['itemsByStatus'] = { 'NEW': 0, 'USED': 0, 'BROKEN': 0 };
-        }
-        product.items.forEach(item => {
-            productsTransformed[index].itemsByStatus[item.status]++;
-        })
-    })
-    return productsTransformed;
-})
 //
 function updateImagesLinks($event: string[]) {
     console.log('images', $event);
@@ -148,59 +133,16 @@ function onProductCreated($event: productWithId) {
 
 <template>
     <v-card class="mx-auto px-6 py-8 mt-14">
-        <v-table>
-            <thead>
-                <tr>
-                    <th class="text-left">
-                        Product
-                    </th>
-                    <th class="text-left">
-                        Category
-                    </th>
-                    <th class="text-left">
-                        Description
-                    </th>
-                    <th class="text-center">
-                        Image
-                    </th>
-                    <th class="text-center">
-                        Count
-                    </th>
-                    <th class="text-center">
-                        Actions
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for=" product in productsTransformed" :key="`${product.id}${product.images[0]}`">
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.category.name }}</td>
-                    <td>{{ product.description }}</td>
-                    <td>
-                        <template v-if="product.images.length">
-                            <Image :src="product.images[0]" alt="no image" class="mobile-w" />
-                        </template>
-                        <template v-else>
-                            <span>no images</span>
-                        </template>
-                    </td>
-                    <td>
-                        <ItemByStatusList :items-by-status="product.itemsByStatus" />
-                    </td>
-                    <td class="text-center">
-                        <v-btn block variant="text" :to="{ name: 'products-id', params: { 'id': product.id } }" nuxt>
-                            <v-icon :icon="mdiPlayBoxOutline" color="green"></v-icon>
-                        </v-btn>
-
-                        <v-btn block @click="openEditProductDialog(product)" variant="text">
-                            <v-icon :icon="mdiPencil" color="green"></v-icon>
-                        </v-btn>
-                        <v-btn block @click="openDeleteProductDialog(product)" variant="text">
-                            <v-icon :icon="mdiDeleteForever" color="red"></v-icon>
-                        </v-btn>
-
-                    </td>
-                </tr>
+        <ProductsTable :products="products">
+            <template #extraActions="{ product }">
+                <v-btn block @click="openEditProductDialog(product)" variant="text">
+                    <v-icon :icon="mdiPencil" color="green"></v-icon>
+                </v-btn>
+                <v-btn block @click="openDeleteProductDialog(product)" variant="text">
+                    <v-icon :icon="mdiDeleteForever" color="red"></v-icon>
+                </v-btn>
+            </template>
+            <template #extraRows>
                 <tr>
                     <td colspan="5"></td>
                     <td class="text-center">
@@ -209,8 +151,8 @@ function onProductCreated($event: productWithId) {
                         </v-btn>
                     </td>
                 </tr>
-            </tbody>
-        </v-table>
+            </template>
+        </ProductsTable>
         <v-dialog v-model="isOpenCreateDialog" max-width="660">
             <FormProduct @success="onProductCreated" class="w-full" />
         </v-dialog>
@@ -238,29 +180,7 @@ function onProductCreated($event: productWithId) {
 </template>
 
 <style>
-.mobile-w {
-    min-width: 80px;
-    max-width: 150px;
-}
-
-@media (max-width: 900px) {
-    .mobile-w {
-        min-width: 80px;
-    }
-}
-
 .w-full {
     width: 100%;
-}
-
-
-
-.flex {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.img-width {
-    max-width: 60px;
 }
 </style>
