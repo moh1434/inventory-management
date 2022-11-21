@@ -113,7 +113,8 @@ async function onCreateProductClick() {
         <v-form v-model="isValidForm" ref="formRef">
             <v-card-title class="px-0">product data:</v-card-title>
 
-            <FormBaseProduct :product="form.data" @update:images-to-upload="updateImagesByUpload($event)"
+            <FormBaseProduct :product="form.data" :isImageRequired="true"
+                @update:images-to-upload="updateImagesByUpload($event)"
                 @update:description="form.data.description = $event" @update:name="form.data.name = $event"
                 @update:category-id="form.data.categoryId = $event" @update:items="form.data.items = $event" />
 

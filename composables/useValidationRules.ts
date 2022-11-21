@@ -15,17 +15,23 @@ const phoneNumber = (v: string) =>
     !!Number(v)) ||
   "Phone must starts with '07', and contains 11 number";
 
-const images = [
-  (files: File[]) => Array.isArray(files) || "Invalid values",
-  (files: File[]) =>
-    (Array.isArray(files) && files.length <= 4) ||
-    "you can't upload more than 4 images",
-  (files: File[]) =>
-    (Array.isArray(files) &&
-      (files.length === 0 ||
-        files.some((file: File) => file.size < 4000000))) ||
-    "Image size should be less than 4 MB",
-];
+const images = (isRequired = false) => {
+  const requiredRule = isRequired
+    ? (files: File[]) => files.length > 0 || "Images are required"
+    : () => true;
+
+  const rules = [
+    (files: File[]) => Array.isArray(files) || "Invalid values",
+    requiredRule,
+    (files: File[]) =>
+      files.length <= 4 || "you can't upload more than 4 images",
+    (files: File[]) =>
+      files.every((file: File) => file.size < 4000000) ||
+      "Image size should be less than 4 MB",
+  ];
+
+  return rules;
+};
 
 function password(password: string) {
   return (

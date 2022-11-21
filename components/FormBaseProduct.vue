@@ -7,6 +7,7 @@ import { categoryWithId, itemWithID } from '../types';
 
 interface Props {
     product: productI;
+    isImageRequired: boolean
 }
 const props = defineProps<Props>();
 
@@ -103,7 +104,7 @@ function deleteImage(index: number) {
                     </v-btn>
                 </v-card-item>
             </div>
-            <v-file-input class="mt-5 px-6" v-model="imagesToUpload" show-size multiple :rules="images"
+            <v-file-input class="mt-5 px-6" v-model="imagesToUpload" show-size multiple :rules="images(isImageRequired)"
                 accept="image/png, image/jpeg" placeholder="add image" :prepend-icon="mdiCamera" label="Add new image">
             </v-file-input>
         </v-card>

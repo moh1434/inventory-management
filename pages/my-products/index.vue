@@ -161,7 +161,7 @@ function onProductCreated($event: productWithId) {
                 @GreenBtnClick="editProduct" title="Edit Product:" :loading="loadingEditDelete" :maxWidth="560">
                 <v-form ref="formRef">
                     <!--  @update:institution-id="editDialogProduct?.institutionId" -->
-                    <FormBaseProduct :product="editDialogProduct"
+                    <FormBaseProduct :product="editDialogProduct" :isImageRequired="false"
                         @update:description="editDialogProduct.description = $event"
                         @update:name="editDialogProduct.name = $event"
                         @update:category-id="editDialogProduct.categoryId = $event"
