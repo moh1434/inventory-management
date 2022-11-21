@@ -26,21 +26,6 @@ const { required, notEmpty, images } = useValidationRules();
 // 
 const { categories } = useCategories();
 // 
-// const institutions = ref<institutionWithIdI[]>([]);
-// useWrapFetch<institutionWithIdI[]>('institution').then(({ result }) => {
-//     if (!result) {
-//         institutions.value = [];
-//         return;
-//     };
-//     institutions.value = result;
-// });
-// const institutionsVuetify = computed(() => {
-//     return institutions.value.map(institution => ({
-//         title: institution.name,
-//         value: institution.id,
-//     }))
-// });
-// 
 
 const imagesToUpload = ref<File[]>([]);
 watch(imagesToUpload, () => {
