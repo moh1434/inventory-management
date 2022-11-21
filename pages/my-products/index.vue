@@ -175,7 +175,7 @@ function onProductCreated($event: productWithId) {
                 </tr>
             </thead>
             <tbody>
-                <tr v-for=" product in productsTransformed" :key="product.id">
+                <tr v-for=" product in productsTransformed" :key="`${product.id}${product.images[0]}`">
                     <td>{{ product.name }}</td>
                     <td>{{ product.category.name }}</td>
                     <td>{{ product.description }}</td>
