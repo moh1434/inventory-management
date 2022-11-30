@@ -1,9 +1,8 @@
 <script setup lang='ts'>
-import { institutionI } from '~~/types';
-
+import { institutionI, institutionWithIdI } from '~~/types';
 
 interface Props {
-    institution: institutionI;
+    institution: institutionI | institutionWithIdI;
 }
 const props = defineProps<Props>();
 

@@ -1,47 +1,74 @@
 <script setup lang='ts'>
 import { mdiPencil, mdiDeleteForever, mdiPlusBox } from '@mdi/js';
 import { Ref } from 'nuxt/dist/app/compat/capi';
+import { productFormBuild } from '~~/helpers/productFormBulid';
 
-import { categoryWithId, ministryWithId, vuetifyFormI } from '~~/types';
+import { categoryWithId, institutionWithIdI, ministryWithId, productWithIdAndUploadImages, vuetifyFormI } from '~~/types';
 
 interface Props {
-  items: categoryWithId[] | ministryWithId[];
+  items: categoryWithId[] | ministryWithId[] | institutionWithIdI[] | productWithIdAndUploadImages[];
   /** categories, institutions, ... */
   itemText: string;
   /** api endpoint */
   endpointUrl: string;
   deleteDialogSubTitle?: string;
+  thTableList: (keyof categoryWithId)[] | (keyof ministryWithId)[] | (keyof institutionWithIdI)[] | (keyof productWithIdAndUploadImages)[];
+
+  //
+  useProductForm?: boolean;
+  useBlockBtn?: boolean;
 }
 type itemType = typeof props.items[0];
 
 const props = defineProps<Props>();
 
-//
+const { required, notEmpty } = useValidationRules();
+
+const formRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
+
 const loadingEditDelete = ref(false);
 const editDialogItem = ref<itemType>();
 function openEditItemDialog(item: itemType) {
   editDialogItem.value = { ...item };
 }
 
-async function editItem() {
-  loadingEditDelete.value = true;
-  const targetItem = props.items.find(item => item.id === editDialogItem.value?.id);
 
-  if (!targetItem || editDialogItem.value?.name === targetItem?.name) {
+function transformBody(targetIndex?: number) {
+  if (props.useProductForm && editDialogItem.value && typeof targetIndex === 'number') {
+    const editDialogProduct = editDialogItem.value as productWithIdAndUploadImages;
+    let items = editDialogProduct.items;
+    if (JSON.stringify(editDialogProduct.items) === JSON.stringify((props.items as productWithIdAndUploadImages[])[targetIndex]?.items)) {
+      items = [];
+    }
+    const formData = productFormBuild({ ...editDialogProduct, items });
+    return formData;
+  }
+
+  return editDialogItem.value;
+}
+
+async function editItem() {
+  const isValid = await formRef.value.validate();
+  if (!isValid.valid) return
+
+  loadingEditDelete.value = true;
+  const targetIndex = props.items.findIndex(item => item.id === editDialogItem.value?.id);
+
+  if (targetIndex == -1 || JSON.stringify(editDialogItem.value) === JSON.stringify(props.items[targetIndex])) {
     loadingEditDelete.value = false;
     editDialogItem.value = undefined;
     return;
   }
 
+  const body = transformBody(targetIndex);
   const { result } = await useWrapFetch<itemType>(`${props.endpointUrl}/${editDialogItem.value?.id}`, {
     method: 'PATCH',
-    body: {
-      name: editDialogItem.value?.name
-    }
+    body // editDialogItem.value.name
   });
   if (result) {
-    targetItem.name = result.name;
     editDialogItem.value = undefined;
+    emit('EditedItem', { index: targetIndex, newItem: result });
+    // Object.assign(props.items, result);
   }
   loadingEditDelete.value = false;
 }
@@ -64,38 +91,30 @@ async function deleteItem() {
     method: 'DELETE'
   });
   if (!error) {
-    props.items.splice(index, 1);
+    emit('DeletedItem', index);
+    // props.items.splice(index, 1);
     deleteDialogItem.value = undefined;
   }
   loadingEditDelete.value = false;
 }
 //
+const isOpenCreateDialog = ref<boolean>(false);
 
-const createItemName = ref('');
 
-const loadingCreate = ref(false);
+const emit = defineEmits<{
+  (e: 'CreatedItem', newItem: itemType): void
+  (e: 'EditedItem', newItemAndIndex: { index: number, newItem: itemType }): void
+  (e: 'DeletedItem', deletedIndex: number): void
+}>();
 
-const formRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
 
-const { required, notEmpty } = useValidationRules();
-
-async function createItem() {
-
-  const isValid = await formRef.value.validate();
-  if (!isValid.valid) return
-
-  loadingCreate.value = true;
-  const { result } = await useWrapFetch<itemType>(props.endpointUrl, {
-    method: 'POST',
-    body: {
-      name: createItemName.value
-    }
-  });
-  loadingCreate.value = false;
-  if (result) {
-    props.items.push(result);
-    formRef.value.reset();
-  }
+function onCreatedItem($event: itemType) {
+  console.log('onCreatedItem', $event);
+  const createdItem = $event;
+  if (!createdItem) return;
+  emit('CreatedItem', createdItem);
+  isOpenCreateDialog.value = false;
+  // useAlerts().setAlert('institution created successfully', 'success');
 }
 </script>
 
@@ -104,50 +123,62 @@ async function createItem() {
     <v-table>
       <thead>
         <tr>
-          <th class="text-left" colspan="2">
-            Item
+          <th class="text-left" v-for="th, index in thTableList" :key="index">
+            {{ th }}
+          </th>
+          <slot name="extra-th" />
+          <th class="text-right pr-14">
+            actions
           </th>
         </tr>
       </thead>
       <tbody>
         <tr v-for=" item in props.items" :key="item.id">
-          <td>{{ item.name }}</td>
+          <!-- @ts-ignore -->
+          <td v-for="th, index in thTableList" :key="index">{{ item[th] }}</td>
+          <slot name="extra-td" :item="item" />
+
           <td class="text-right">
-            <v-btn @click="openEditItemDialog(item)" variant="text">
+            <slot name="extra-actions" :item="item" />
+            <v-btn :block="!!useBlockBtn" @click="openEditItemDialog(item)" variant="text">
               <v-icon :icon="mdiPencil" color="green"></v-icon>
             </v-btn>
 
-            <v-btn @click="openDeleteItemDialog(item)" variant="text">
+            <v-btn :block="!!useBlockBtn" @click="openDeleteItemDialog(item)" variant="text">
               <v-icon :icon="mdiDeleteForever" color="red"></v-icon>
             </v-btn>
           </td>
         </tr>
         <tr>
-          <td colspan="2">
-            <v-form ref="formRef" class="flex">
-              <v-text-field v-model="createItemName" :label="`new ${itemText}`" required :disabled="loadingCreate"
-                variant="underlined" :rules="[required(itemText), notEmpty(itemText)]">
-              </v-text-field>
-              <v-card-actions>
-                <v-btn @click="createItem" variant="text" :disabled="loadingCreate" :loading="loadingCreate">
-                  <v-icon :icon="mdiPlusBox" color="green" size="large"></v-icon>
-                </v-btn>
-              </v-card-actions>
-            </v-form>
+          <td class="text-right" colspan="100%">
+            <v-btn @click="isOpenCreateDialog = true" variant="text">
+              <v-icon :icon="mdiPlusBox" color="green" size="large"></v-icon>
+            </v-btn>
+            <!-- <v-btn variant="text" class="visibility-h"></v-btn> -->
           </td>
         </tr>
       </tbody>
     </v-table>
+    <v-dialog v-model="isOpenCreateDialog" max-width="660">
+      <slot name="createItem" :onCreatedItem="onCreatedItem">
+        <FormCreateItem :endpoint-url="endpointUrl" :item-text="itemText" @success="onCreatedItem" />
+      </slot>
+    </v-dialog>
     <template v-if="editDialogItem">
-      <Dialog :dialogValue="editDialogItem.name" @btn-red-click="editDialogItem = undefined" @GreenBtnClick="editItem"
-        :title="`Edit ${itemText}`" :loading="loadingEditDelete">
-        <v-text-field v-model="editDialogItem.name" :label="itemText">
-        </v-text-field>
+      <Dialog :dialogValue="editDialogItem.name" @btn-red-click="editDialogItem = undefined"
+        @close="editDialogItem = undefined" @GreenBtnClick="editItem" :title="`Edit ${itemText}`"
+        :loading="loadingEditDelete">
+        <v-form ref="formRef">
+          <slot name="editItem" :editDialogItem="editDialogItem">
+            <v-text-field v-model="editDialogItem.name" :label="itemText" :rules="[required('Name'), notEmpty('Name')]">
+            </v-text-field>
+          </slot>
+        </v-form>
       </Dialog>
     </template>
     <template v-if="deleteDialogItem">
       <Dialog :dialogValue="deleteDialogItem.name" @green-btn-click="deleteDialogItem = undefined"
-        @btn-red-click="deleteItem" btn-green-text="Cancel" btn-red-text="Delete"
+        @close="deleteDialogItem = undefined" @btn-red-click="deleteItem" btn-green-text="Cancel" btn-red-text="Delete"
         :title="`Delete ${itemText} ${deleteDialogItem.name}`" :subTitle="deleteDialogSubTitle"
         :loading="loadingEditDelete">
       </Dialog>
@@ -160,4 +191,12 @@ async function createItem() {
   display: flex;
   flex-wrap: wrap;
 }
+
+.w-full {
+  width: 100%;
+}
+
+/* .visibility-h {
+  visibility: hidden;
+} */
 </style>

@@ -1,8 +1,7 @@
 <script setup lang='ts'>
-import cloneDeep from 'clone-deep';
 import { mdiPlayBoxOutline } from '@mdi/js';
 
-import { productTransformedWithId, productWithId } from '~~/types';
+import { productWithId } from '~~/types';
 
 interface Props {
     products: productWithId[];
@@ -10,21 +9,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const productsTransformed = computed(() => {
-    const productsTransformed: productTransformedWithId[] = cloneDeep(props.products) as any[];
-    props.products.forEach((product, index) => {
-        if (productsTransformed[index].description) {
-            productsTransformed[index].description = productsTransformed[index].description.slice(0, 32);
-        }
-        if (!productsTransformed[index].itemsByStatus) {
-            productsTransformed[index]['itemsByStatus'] = { 'NEW': 0, 'USED': 0, 'BROKEN': 0 };
-        }
-        product.items.forEach(item => {
-            productsTransformed[index].itemsByStatus[item.status]++;
-        })
-    })
-    return productsTransformed;
-})
+const { productsTransformed } = useTransformProducts(toRef(props, 'products'));
 
 </script>
 

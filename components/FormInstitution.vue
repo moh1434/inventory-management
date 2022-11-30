@@ -73,7 +73,6 @@ async function onCreateInstitutionClick() {
     if (!result) return;
     // console.log('result', result);
 
-    delete result['ministry'];
     form.value = initialForm();
     emit('success', result);
 

@@ -22,14 +22,14 @@ withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
+    (e: 'close'): void
     (e: 'BtnRedClick'): void
     (e: 'GreenBtnClick'): void
 }>()
 </script>
 
 <template>
-    <v-dialog :model-value="typeof dialogValue == 'string'" @update:model-value="emit('BtnRedClick')"
-        :max-width="maxWidth">
+    <v-dialog :model-value="typeof dialogValue == 'string'" @update:model-value="emit('close')" :max-width="maxWidth">
         <v-card v-if="typeof dialogValue == 'string'" class="px-6 py-6 min-h-180p">
             <v-card-title v-if="title" class="px-0 " :class="{ 'pb-0': !!subTitle }">{{ title }}</v-card-title>
             <v-card-subtitle v-if="subTitle" class="px-1">{{ subTitle }}</v-card-subtitle>
