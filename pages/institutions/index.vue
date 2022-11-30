@@ -51,11 +51,6 @@ function afterDeleteItem($event: number) {
 </template>
 
 <style>
-.flex {
-    display: flex;
-    flex-wrap: wrap;
-}
-
 .img-width {
     max-width: 60px;
 }

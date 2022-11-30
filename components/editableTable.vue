@@ -154,7 +154,6 @@ function onCreatedItem($event: itemType) {
             <v-btn @click="isOpenCreateDialog = true" variant="text">
               <v-icon :icon="mdiPlusBox" color="green" size="large"></v-icon>
             </v-btn>
-            <!-- <v-btn variant="text" class="visibility-h"></v-btn> -->
           </td>
         </tr>
       </tbody>
@@ -187,16 +186,5 @@ function onCreatedItem($event: itemType) {
 </template>
 
 <style>
-.flex {
-  display: flex;
-  flex-wrap: wrap;
-}
 
-.w-full {
-  width: 100%;
-}
-
-/* .visibility-h {
-  visibility: hidden;
-} */
 </style>

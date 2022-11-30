@@ -23,7 +23,6 @@ const productsSearched = ref<productWithId[]>([]);
     </v-card>
 </template>
 
-<style scoped>
-/* TODO: union all css files, without repeat classes */
-/* make sure to use scoped if you will not union css files */
+<style>
+
 </style>

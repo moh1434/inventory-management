@@ -71,10 +71,6 @@ function updateImagesByUpload($event: File[]) {
 }
 //
 
-//delete this before insert to API.
-// item id, productId, institutionId (backend will set it from auth user), 
-//category id,
-// images
 async function onCreateProductClick() {
     const isValid = await formRef.value.validate();
     if (!isValid.valid) return

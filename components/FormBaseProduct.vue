@@ -68,9 +68,6 @@ function deleteImage(index: number) {
         <v-select :items="categories" item-title="name" item-value="id" :model-value="product.categoryId"
             @update:model-value="emit('update:categoryId', $event)">
         </v-select>
-        <!-- <v-select :items="institutionsVuetify" :model-value="product.institutionId"
-            @change="emit('update:institutionId', $event)"></v-select> -->
-        <!-- <div  class="flex justify-evenly"> -->
 
         <v-card class="mb-5">
             <v-card-title>Images</v-card-title>

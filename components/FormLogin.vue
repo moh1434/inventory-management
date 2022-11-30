@@ -10,6 +10,7 @@ const config = useRuntimeConfig();
 const formRef = ref<vuetifyFormI>() as unknown as Ref<vuetifyFormI>;
 const isValidForm = ref(null);
 const form = reactive({
+  // TODO: danger this printed in dist deploy files also!, remove it and use .env if you want, also it printed in github!
   data: {
     username: config.public.isDebug ? 'admin_' : '',
     password: config.public.isDebug ? 'pleasechangemeiamadmin_' : '',

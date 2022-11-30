@@ -19,9 +19,6 @@ useWrapFetch<productWithIdAndInstitution>(`/products/${params.id}`).then(({ resu
 <template>
     <v-container>
         <v-card v-if="product">
-            <!-- <v-card-title>{{ product.name }}</v-card-title>
-            <v-card-item>{{ product.category.name }}</v-card-item>
-            <v-card-item>{{ product.description }}</v-card-item> -->
             <v-card class="ma-6 pb-6">
                 <v-card-title>Product data</v-card-title>
                 <v-table>
@@ -88,12 +85,6 @@ useWrapFetch<productWithIdAndInstitution>(`/products/${params.id}`).then(({ resu
                             </tr>
                         </tbody>
                     </v-table>
-                    <!-- 
-                    <div v-for="(item, index) in product.items" :key="index" class="flex">
-                        <v-card-item>{{ index + 1 }}:</v-card-item>
-                        <v-card-item>{{ item.code }}</v-card-item>
-                        <v-card-item>{{ item.status }}</v-card-item>
-                    </div> -->
                 </template>
                 <template v-else>
                     No items
@@ -147,6 +138,5 @@ useWrapFetch<productWithIdAndInstitution>(`/products/${params.id}`).then(({ resu
 
 .image {
     max-width: 250px;
-    /* border: 4px solid rgb(169, 169, 169); */
 }
 </style>
